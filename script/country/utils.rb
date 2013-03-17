@@ -6,10 +6,6 @@ def init_name country, name
 	country.setName(name);
 end
 
-def init_color country, red, green, blue
-	country.setCountryColor(Java::java::awt.Color.new(red, green, blue, 0.2))
-end
-
 def init_cells country, filename
 	list = Java::java::util.ArrayList.new;
 	file = Java::java::io.File.new("script/country/cell/#{filename}")

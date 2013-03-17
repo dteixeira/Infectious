@@ -1,11 +1,11 @@
 package edu.infectious.script.country;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -19,7 +19,6 @@ public class Country {
 	private static ArrayList<Country> countryList = new ArrayList<Country>();
 	
 	private ArrayList<Hexagon> cells;
-	private Color countryColor;
 	private String name;
 	private CountryState state;
 	
@@ -70,14 +69,6 @@ public class Country {
 
 	public void setCells(ArrayList<Hexagon> cells) {
 		this.cells = cells;
-	}
-
-	public Color getCountryColor() {
-		return countryColor;
-	}
-
-	public void setCountryColor(Color countryColor) {
-		this.countryColor = countryColor;
 	}
 
 	public String getName() {

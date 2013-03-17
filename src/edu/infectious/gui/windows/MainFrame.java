@@ -17,6 +17,7 @@ public class MainFrame extends JFrame {
 		setupFrame();
 		setupMapPanel();
 		setupCountry();
+		StandardDialog.setupDialogs();
 	}
 
 	private void setupFrame() {

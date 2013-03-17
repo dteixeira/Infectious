@@ -31,12 +31,12 @@ public class MapPanel extends JPanel {
 	private static final Color GRID_COLOR = new Color(.8f, .8f, .8f, .1f);
 	private static final Color POINTER_LINE_COLOR = new Color(0f, .5f, 1f, 1f);
 	private static final Color POINTER_FILL_COLOR = new Color(0f, .5f, 1f, .5f);
-	private static final Color OK_COLOR = new Color(0f, 1f, 0f, .5f);
-	private static final Color INFECTED_COLOR = new Color(.5f, .5f, 0f, .5f);
-	private static final Color DEAD_COLOR = new Color(1f, 0f, 0f, .5f);
+	private static final Color OK_COLOR = new Color(0f, 0.459f, 0.063f, .3f);
+	private static final Color INFECTED_COLOR = new Color(0.831f, 0.804f, 0f, .3f);
+	private static final Color DEAD_COLOR = new Color(0.659f, 0.122f, 0f, .3f);
 	private static final int GRID_STROKE_WIDTH = 5;
 	private static final int POINTER_STROKE_WIDTH = 3;
-	private static final String MAP_FILENAME = "images/world.jpg";
+	private static final String MAP_FILENAME = "images/world2.jpg";
 	private static MapPanel instance = null;
 
 	private HexagonFactory hexagonFactory = null;
@@ -176,13 +176,28 @@ public class MapPanel extends JPanel {
 
 		// Correct screen ratio for drawing hexagons
 		g2d1.scale(1.0, screenRatioCorrectionFactor);
-
-		// Draw mouse pointer
+		
+		// Draw selected country, if any
 		Hexagon hex = pointer;
+		Country country = hex.getCountry();
+		if(country != null) {
+			for(Hexagon h : country.getCells()) {
+				g2d1.setColor(POINTER_FILL_COLOR);
+				g2d1.fillPolygon(h.getHexagon());
+				g2d1.setStroke(new BasicStroke(POINTER_STROKE_WIDTH));
+				g2d1.setColor(POINTER_LINE_COLOR);
+				g2d1.drawPolygon(h.getHexagon());
+			}
+		}
+		
+		// Draw mouse pointer
 		g2d1.setColor(POINTER_FILL_COLOR);
 		g2d1.fillPolygon(hex.getHexagon());
 		g2d1.setStroke(new BasicStroke(POINTER_STROKE_WIDTH));
-		g2d1.setColor(POINTER_LINE_COLOR);
+		if(country == null)
+			g2d1.setColor(POINTER_LINE_COLOR);
+		else
+			g2d1.setColor(Color.WHITE);
 		g2d1.drawPolygon(hex.getHexagon());
 
 		// Dispose of graphics context
@@ -199,10 +214,8 @@ public class MapPanel extends JPanel {
 		g.scale(1.0, screenRatioCorrectionFactor);
 		for(Country c : Country.getCountryList()) {
 			for(Hexagon hex : c.getCells()) {
-				g.setColor(c.getCountryColor());
-				g.fillPolygon(hex.getHexagon());
 				setStateColor(g, c.getState());
-				g.drawPolygon(hex.getHexagon());
+				g.fillPolygon(hex.getHexagon());
 			}
 		}
 	}

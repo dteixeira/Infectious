@@ -8,8 +8,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
-
 import edu.infectious.gui.utilities.Hexagon;
+import edu.infectious.gui.windows.CountryInfoDialog;
 import edu.infectious.gui.windows.MapPanel;
 
 public class MapManipulationListener implements MouseListener,
@@ -72,6 +72,8 @@ public class MapManipulationListener implements MouseListener,
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		MapPanel panel = (MapPanel) e.getComponent();
+		new CountryInfoDialog(panel.getPointer().getCountry()).setVisible(true);
 	}
 
 	@Override
