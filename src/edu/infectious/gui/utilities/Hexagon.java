@@ -2,11 +2,14 @@ package edu.infectious.gui.utilities;
 
 import java.awt.Polygon;
 
+import edu.infectious.script.country.Country;
+
 public class Hexagon {
 
 	private Polygon hexagon = null;
 	private int x = 0;
 	private int y = 0;
+	private Country country = null;
 
 	public Polygon getHexagon() {
 		return hexagon;
@@ -35,6 +38,14 @@ public class Hexagon {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
 	}
 
 }

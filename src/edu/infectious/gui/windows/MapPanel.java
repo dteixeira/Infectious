@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import edu.infectious.gui.listeners.MapManipulationListener;
 import edu.infectious.gui.utilities.Hexagon;
 import edu.infectious.gui.utilities.HexagonFactory;
+import edu.infectious.script.country.Country;
+import edu.infectious.script.country.CountryState;
 
 public class MapPanel extends JPanel {
 
@@ -29,13 +31,18 @@ public class MapPanel extends JPanel {
 	private static final Color GRID_COLOR = new Color(.8f, .8f, .8f, .1f);
 	private static final Color POINTER_LINE_COLOR = new Color(0f, .5f, 1f, 1f);
 	private static final Color POINTER_FILL_COLOR = new Color(0f, .5f, 1f, .5f);
+	private static final Color OK_COLOR = new Color(0f, 1f, 0f, .5f);
+	private static final Color INFECTED_COLOR = new Color(.5f, .5f, 0f, .5f);
+	private static final Color DEAD_COLOR = new Color(1f, 0f, 0f, .5f);
 	private static final int GRID_STROKE_WIDTH = 5;
 	private static final int POINTER_STROKE_WIDTH = 3;
 	private static final String MAP_FILENAME = "images/world.jpg";
+	private static MapPanel instance = null;
 
 	private HexagonFactory hexagonFactory = null;
 	private ArrayList<Hexagon> gridMap = null;
 	private BufferedImage background = null;
+	private BufferedImage turnBackground = null;
 	private Dimension screenSize = null;
 	private Point underMousePoint = new Point(0, 0);
 	private Hexagon pointer = null;
@@ -47,7 +54,13 @@ public class MapPanel extends JPanel {
 	private double heightFactor = 0.0;
 	private double screenRatioCorrectionFactor = 0.0;
 
-	public MapPanel(boolean db) {
+	public static MapPanel getInstance() {
+		if (instance == null)
+			instance = new MapPanel(true);
+		return instance;
+	}
+
+	private MapPanel(boolean db) {
 		super(db);
 		setupBackground();
 		setupTransform();
@@ -81,6 +94,9 @@ public class MapPanel extends JPanel {
 			// Build hexagonGrid
 			setupHexagonGrid(toResize.getWidth(), toResize.getHeight(),
 					adjustedHeight);
+			
+			// Setup turn background
+			createTurnBackground();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -150,12 +166,12 @@ public class MapPanel extends JPanel {
 			g2d1.translate(scrollX, scrollY);
 
 			// Draw full sized map
-			g2d1.drawImage(background, 0, 0, null);
+			g2d1.drawImage(turnBackground, 0, 0, null);
 		}
 		// Normal sized map
 		else {
 			g2d1.scale(widthFactor, heightFactor);
-			g2d1.drawImage(background, 0, 0, null);
+			g2d1.drawImage(turnBackground, 0, 0, null);
 		}
 
 		// Correct screen ratio for drawing hexagons
@@ -171,6 +187,45 @@ public class MapPanel extends JPanel {
 
 		// Dispose of graphics context
 		g2d1.dispose();
+	}
+
+	private void createTurnBackground() {
+		if (turnBackground == null)
+			turnBackground = new BufferedImage(background.getWidth(),
+					background.getHeight(), background.getType());
+		Graphics2D g = turnBackground.createGraphics();
+		g.drawImage(background, 0, 0, null);
+		g.setStroke(new BasicStroke(POINTER_STROKE_WIDTH));
+		g.scale(1.0, screenRatioCorrectionFactor);
+		for(Country c : Country.getCountryList()) {
+			for(Hexagon hex : c.getCells()) {
+				g.setColor(c.getCountryColor());
+				g.fillPolygon(hex.getHexagon());
+				setStateColor(g, c.getState());
+				g.drawPolygon(hex.getHexagon());
+			}
+		}
+	}
+	
+	private void setStateColor(Graphics2D g, CountryState state) {
+		switch(state) {
+		case OK:
+			g.setColor(OK_COLOR);
+			break;
+		case INFECTED:
+			g.setColor(INFECTED_COLOR);
+			break;
+		case DEAD:
+			g.setColor(DEAD_COLOR);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public void refreshTurn() {
+		createTurnBackground();
+		repaint();
 	}
 
 	public boolean isZoomed() {
