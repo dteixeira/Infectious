@@ -12,7 +12,7 @@ end
 
 def init_cells country, filename
 	list = Java::java::util.ArrayList.new;
-	file = Java::java::io.File.new(filename)
+	file = Java::java::io.File.new("script/country/cell/#{filename}")
 	scanner = Java::java::util.Scanner.new(file)
 	total = scanner.nextInt()
 	(0...total).each do |i|
@@ -20,6 +20,7 @@ def init_cells country, filename
 		list.add(point)
 	end
 	country.bind_cells(list)
+	scanner.close
 end
 
 def add_country country

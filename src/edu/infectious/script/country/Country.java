@@ -3,8 +3,8 @@ package edu.infectious.script.country;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -14,8 +14,8 @@ import edu.infectious.gui.windows.MapPanel;
 
 public class Country {
 	
-	private static final String COUNTRY_PATH = "script/country/";
-	private static final String COUNTRY_UTILS_NAME = "utils.rb";
+	private static final String COUNTRY_PATH = "script/country/rb/";
+	private static final String COUNTRY_UTILS_PATH = "script/country/utils.rb";
 	private static ArrayList<Country> countryList = new ArrayList<Country>();
 	
 	private ArrayList<Hexagon> cells;
@@ -33,15 +33,18 @@ public class Country {
 		
 		// Compile scripts
 		try {
-			jruby.eval(new FileReader(new File(COUNTRY_PATH + COUNTRY_UTILS_NAME)));
+			jruby.eval(new FileReader(new File(COUNTRY_UTILS_PATH)));
 			File folder = new File(COUNTRY_PATH);
+			System.err.println("Loading countries...");
 			for(File file : folder.listFiles()) {
-				if(file.getName().endsWith(".rb") && !file.getName().toLowerCase().equals(COUNTRY_UTILS_NAME)) {
-					jruby.eval(new FileReader(file));
-					System.out.println(countryList.get(0).getName());
+				if(file.getName().endsWith(".rb")) {
+					FileReader reader = new FileReader(file);
+					jruby.eval(reader);
+					reader.close();
+					System.err.println(" * " + countryList.get(countryList.size() - 1).getName());
 				}
 			}
-		} catch (FileNotFoundException | ScriptException e1) {
+		} catch (ScriptException | IOException e1) {
 			e1.printStackTrace();
 			System.exit(0);
 		}
