@@ -21,9 +21,50 @@ public class Country {
 	private ArrayList<Hexagon> cells;
 	private String name;
 	private CountryState state;
+	private CountryClimateHumidity humidity;
+	private CountryClimateTemperature temperature;
+	private CountryType type;
+	private int totalPeople;
+	private int alivePeople;
+	private int infectedPeople;
+	private int healtyPeople;
+	private int deadPeople;
+	private int nPorts;
+	private int nAirports;
+	private int nHospitals;
+	private boolean closedPorts;
+	private boolean closedAirports;
+	private boolean closedBorders;
+	private boolean closedHospitals;
+	private CountryThreshold airportThreshold;
+	private CountryThreshold portThreshold;
+	private CountryThreshold hospitalThreshold;
+	private CountryThreshold borderThreshold;
+	private String[] neighbourNames;
+	private Country[] neighbourCountries;
 	
 	public Country() {
+		name = "";
 		state = CountryState.OK;
+		humidity = CountryClimateHumidity.MEDITERRANEAN;
+		temperature = CountryClimateTemperature.TEMPERATE;
+		type = CountryType.INDUSTRIAL;
+		alivePeople = 0;
+		infectedPeople = 0;
+		healtyPeople = 0;
+		deadPeople = 0;
+		nPorts = 0;
+		nAirports = 0;
+		nHospitals = 0;
+		closedPorts = false;
+		closedAirports = false;
+		closedBorders = false;
+		closedHospitals = false;
+		airportThreshold = new CountryThreshold(0, 0);
+		portThreshold = new CountryThreshold(0, 0);
+		hospitalThreshold = new CountryThreshold(0, 0);
+		borderThreshold = new CountryThreshold(0, 0);
+		
 	}
 	
 	public static void initCountry() {
@@ -89,6 +130,134 @@ public class Country {
 
 	public void setState(CountryState state) {
 		this.state = state;
+	}
+
+	public CountryClimateHumidity getHumidity() {
+		return humidity;
+	}
+
+	public void setHumidity(CountryClimateHumidity humidity) {
+		this.humidity = humidity;
+	}
+
+	public CountryClimateTemperature getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(CountryClimateTemperature temperature) {
+		this.temperature = temperature;
+	}
+
+	public CountryType getType() {
+		return type;
+	}
+
+	public void setType(CountryType type) {
+		this.type = type;
+	}
+
+	public int getAlivePeople() {
+		return alivePeople;
+	}
+
+	public void setAlivePeople(int alivePeople) {
+		this.alivePeople = alivePeople;
+	}
+
+	public int getInfectedPeople() {
+		return infectedPeople;
+	}
+
+	public void setInfectedPeople(int infectedPeople) {
+		this.infectedPeople = infectedPeople;
+	}
+
+	public int getHealtyPeople() {
+		return healtyPeople;
+	}
+
+	public void setHealtyPeople(int healtyPeople) {
+		this.healtyPeople = healtyPeople;
+	}
+
+	public int getDeadPeople() {
+		return deadPeople;
+	}
+
+	public void setDeadPeople(int deadPeople) {
+		this.deadPeople = deadPeople;
+	}
+
+	public int getnPorts() {
+		return nPorts;
+	}
+
+	public void setnPorts(int nPorts) {
+		this.nPorts = nPorts;
+	}
+
+	public int getnAirports() {
+		return nAirports;
+	}
+
+	public void setnAirports(int nAirports) {
+		this.nAirports = nAirports;
+	}
+
+	public int getnHospitals() {
+		return nHospitals;
+	}
+
+	public void setnHospitals(int nHospitals) {
+		this.nHospitals = nHospitals;
+	}
+
+	public int getTotalPeople() {
+		return totalPeople;
+	}
+
+	public void setTotalPeople(int totalPeople) {
+		this.totalPeople = totalPeople;
+	}
+
+	public CountryThreshold getAirportThreshold() {
+		return airportThreshold;
+	}
+
+	public void setAirportThreshold(CountryThreshold airportThreshold) {
+		this.airportThreshold = airportThreshold;
+	}
+
+	public CountryThreshold getPortThreshold() {
+		return portThreshold;
+	}
+
+	public void setPortThreshold(CountryThreshold portThreshold) {
+		this.portThreshold = portThreshold;
+	}
+
+	public CountryThreshold getHospitalThreshold() {
+		return hospitalThreshold;
+	}
+
+	public void setHospitalThreshold(CountryThreshold hospitalThreshold) {
+		this.hospitalThreshold = hospitalThreshold;
+	}
+
+	public CountryThreshold getBorderThreshold() {
+		return borderThreshold;
+	}
+
+	public void setBorderThreshold(CountryThreshold borderThreshold) {
+		this.borderThreshold = borderThreshold;
+	}
+
+	public String[] getNeighbourNames() {
+		return neighbourNames;
+	}
+
+	public void setNeighbourNames(String[] neighbourNames) {
+		this.neighbourNames = neighbourNames;
 	}
 
 }

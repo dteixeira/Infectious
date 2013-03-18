@@ -1,24 +1,97 @@
-def init_country
-	Java::edu::infectious::script::country.Country.new
-end
+require 'java'
 
-def init_name country, name
-	country.setName(name);
-end
+module CModule
 
-def init_cells country, filename
-	list = Java::java::util.ArrayList.new;
-	file = Java::java::io.File.new("script/country/cell/#{filename}")
-	scanner = Java::java::util.Scanner.new(file)
-	total = scanner.nextInt()
-	(0...total).each do |i|
-		point = Java::java::awt.Point.new(scanner.nextInt(), scanner.nextInt())
-		list.add(point)
+	# Java imported packages
+	include_package 'edu.infectious.script.country'
+	include_package 'java.awt'
+	include_package 'java.io'
+	include_package 'java.util'
+	
+	def self.included(base)
+       	base.extend(ClassMethods)
+    end
+	
+	# Utility methods for country creation
+	module ClassMethods
+	
+		def init_country
+			CModule::Country.new
+		end
+		
+		def name country, name
+			country.setName(name);
+		end
+		
+		def cells country, filename
+			list = CModule::ArrayList.new;
+			file = CModule::File.new("script/country/cell/#{filename}")
+			scanner = CModule::Scanner.new(file)
+			total = scanner.nextInt()
+			(0...total).each do |i|
+				point = CModule::Point.new(scanner.nextInt(), scanner.nextInt())
+				list.add(point)
+			end
+			country.bind_cells(list)
+			scanner.close
+		end
+		
+		def temperature country, temperature
+			country.setTemperature(CModule::CountryClimateTemperature.valueOf(temperature.to_s.upcase))
+		end
+		
+		def humidity country, humidity
+			country.setHumidity(CModule::CountryClimateHumidity.valueOf(humidity.to_s.upcase))
+		end
+		
+		def type country, type
+			country.setType(CModule::CountryType.valueOf(type.to_s.upcase))
+		end
+		
+		def total_people country, people
+			country.setTotalPeople(people)
+			country.setAlivePeople(people)
+		end
+		
+		def number_ports country, ports
+			country.setnPorts(ports)
+		end
+	
+		def number_airports country, ports
+			country.setnAirports(ports)
+		end
+		
+		def number_hospitals country, hospitals
+			country.setnHospitals(hospitals)
+		end
+		
+		def airport_threshold country, inf, dead
+			country.setAirportThreshold(CModule::CountryThreshold.new(inf, dead))
+		end
+		
+		def port_threshold country, inf, dead
+			country.setPortThreshold(CModule::CountryThreshold.new(inf, dead))
+		end
+		
+		def hospital_threshold country, inf, dead
+			country.setHospitalThreshold(CModule::CountryThreshold.new(inf, dead))
+		end
+		
+		def border_threshold country, inf, dead
+			country.setBorderThreshold(CModule::CountryThreshold.new(inf, dead))
+		end
+		
+		def neighbour_names country, names
+			country.setNeighbourNames(names)
+		end
+		
+		def add_country country
+			CModule::Country.getCountryList().add(country)
+		end
 	end
-	country.bind_cells(list)
-	scanner.close
 end
 
-def add_country country
-	Java::edu::infectious::script::country.Country.getCountryList().add(country)
+# Base call class
+class C
+	include CModule
 end
