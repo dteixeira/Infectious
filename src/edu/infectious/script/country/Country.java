@@ -77,17 +77,38 @@ public class Country {
 			File folder = new File(COUNTRY_PATH);
 			System.err.println("Loading countries...");
 			for(File file : folder.listFiles()) {
-				if(file.getName().endsWith("greenland.rb")) {
+				if(file.getName().endsWith(".rb")) {
 					FileReader reader = new FileReader(file);
 					jruby.eval(reader);
 					reader.close();
 					System.err.println(" * " + countryList.get(countryList.size() - 1).getName());
 				}
 			}
+			findNeighbours();
 		} catch (ScriptException | IOException e1) {
 			e1.printStackTrace();
 			System.exit(0);
 		}
+	}
+	
+	private static void findNeighbours() {
+		for(Country country : countryList) {
+			country.neighbourCountries = new Country[country.neighbourNames.length];
+			for(int i = 0; i < country.neighbourNames.length; ++i) {
+				country.neighbourCountries[i] = findCountryByName(country.neighbourNames[i]);
+				if(country.neighbourCountries[i] == null) {
+					System.err.println(country.name + " has no neighbour called " + country.neighbourNames[i]);
+					System.exit(0);
+				}
+			}
+		}
+	}
+	
+	private static Country findCountryByName(String name) {
+		for(Country c : countryList)
+			if(c.name.equals(name))
+				return c;
+		return null;
 	}
 	
 	public void bindCells(ArrayList<Point> points) {
