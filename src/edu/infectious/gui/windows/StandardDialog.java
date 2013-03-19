@@ -81,11 +81,11 @@ public abstract class StandardDialog extends JDialog {
 	}
 	
 	public static void setupDialogs(Dimension dimension) {
-		setupDialogs(new Color(0.063f, 0.063f, 0.063f), dimension);
+		setupDialogs(new Color(0.137f, 0.137f, 0.137f), dimension);
 	}
 	
 	public static void setupDialogs() {
-		setupDialogs(new Color(0.063f, 0.063f, 0.063f), new Dimension(800, 600));
+		setupDialogs(new Color(0.137f, 0.137f, 0.137f), new Dimension(800, 600));
 	}
 	
 	private static void setupStandardBackground() {

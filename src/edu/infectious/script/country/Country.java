@@ -77,7 +77,7 @@ public class Country {
 			File folder = new File(COUNTRY_PATH);
 			System.err.println("Loading countries...");
 			for(File file : folder.listFiles()) {
-				if(file.getName().endsWith(".rb")) {
+				if(file.getName().endsWith("greenland.rb")) {
 					FileReader reader = new FileReader(file);
 					jruby.eval(reader);
 					reader.close();
@@ -258,6 +258,46 @@ public class Country {
 
 	public void setNeighbourNames(String[] neighbourNames) {
 		this.neighbourNames = neighbourNames;
+	}
+
+	public boolean isClosedPorts() {
+		return closedPorts;
+	}
+
+	public void setClosedPorts(boolean closedPorts) {
+		this.closedPorts = closedPorts;
+	}
+
+	public boolean isClosedAirports() {
+		return closedAirports;
+	}
+
+	public void setClosedAirports(boolean closedAirports) {
+		this.closedAirports = closedAirports;
+	}
+
+	public boolean isClosedBorders() {
+		return closedBorders;
+	}
+
+	public void setClosedBorders(boolean closedBorders) {
+		this.closedBorders = closedBorders;
+	}
+
+	public boolean isClosedHospitals() {
+		return closedHospitals;
+	}
+
+	public void setClosedHospitals(boolean closedHospitals) {
+		this.closedHospitals = closedHospitals;
+	}
+
+	public Country[] getNeighbourCountries() {
+		return neighbourCountries;
+	}
+
+	public void setNeighbourCountries(Country[] neighbourCountries) {
+		this.neighbourCountries = neighbourCountries;
 	}
 
 }
