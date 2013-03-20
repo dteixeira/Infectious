@@ -36,10 +36,7 @@ public class Country {
 	private boolean closedAirports;
 	private boolean closedBorders;
 	private boolean closedHospitals;
-	private CountryThreshold airportThreshold;
-	private CountryThreshold portThreshold;
-	private CountryThreshold hospitalThreshold;
-	private CountryThreshold borderThreshold;
+	private CountryThreshold thresholds;
 	private String[] neighbourNames;
 	private Country[] neighbourCountries;
 	
@@ -60,11 +57,7 @@ public class Country {
 		closedAirports = false;
 		closedBorders = false;
 		closedHospitals = false;
-		airportThreshold = new CountryThreshold(0, 0);
-		portThreshold = new CountryThreshold(0, 0);
-		hospitalThreshold = new CountryThreshold(0, 0);
-		borderThreshold = new CountryThreshold(0, 0);
-		
+		thresholds = new CountryThreshold(0, 0);
 	}
 	
 	public static void initCountry() {
@@ -240,37 +233,13 @@ public class Country {
 	public void setTotalPeople(int totalPeople) {
 		this.totalPeople = totalPeople;
 	}
-
-	public CountryThreshold getAirportThreshold() {
-		return airportThreshold;
+	
+	public CountryThreshold getThresholds() {
+		return thresholds;
 	}
 
-	public void setAirportThreshold(CountryThreshold airportThreshold) {
-		this.airportThreshold = airportThreshold;
-	}
-
-	public CountryThreshold getPortThreshold() {
-		return portThreshold;
-	}
-
-	public void setPortThreshold(CountryThreshold portThreshold) {
-		this.portThreshold = portThreshold;
-	}
-
-	public CountryThreshold getHospitalThreshold() {
-		return hospitalThreshold;
-	}
-
-	public void setHospitalThreshold(CountryThreshold hospitalThreshold) {
-		this.hospitalThreshold = hospitalThreshold;
-	}
-
-	public CountryThreshold getBorderThreshold() {
-		return borderThreshold;
-	}
-
-	public void setBorderThreshold(CountryThreshold borderThreshold) {
-		this.borderThreshold = borderThreshold;
+	public void setThresholds(CountryThreshold thresholds) {
+		this.thresholds = thresholds;
 	}
 
 	public String[] getNeighbourNames() {

@@ -11,10 +11,7 @@ C.total_people			c, 86970564
 C.number_airports		c, 2
 C.number_ports			c, 1
 C.number_hospitals		c, 1
-C.airport_threshold		c, 0.5, 0.2
-C.port_threshold		c, 0.5, 0.2
-C.hospital_threshold	c, 0.5, 0.2
-C.border_threshold		c, 0.5, 0.2
+C.thresholds			c, 0.4, 0.3
 C.neighbour_names		c, ["North Africa"]
 
 # Add country to the application

@@ -64,21 +64,9 @@ module CModule
 		def number_hospitals country, hospitals
 			country.setnHospitals(hospitals)
 		end
-		
-		def airport_threshold country, inf, dead
-			country.setAirportThreshold(CModule::CountryThreshold.new(inf, dead))
-		end
-		
-		def port_threshold country, inf, dead
-			country.setPortThreshold(CModule::CountryThreshold.new(inf, dead))
-		end
-		
-		def hospital_threshold country, inf, dead
-			country.setHospitalThreshold(CModule::CountryThreshold.new(inf, dead))
-		end
-		
-		def border_threshold country, inf, dead
-			country.setBorderThreshold(CModule::CountryThreshold.new(inf, dead))
+
+		def thresholds country, inf, dead
+			country.setThresholds(CModule::CountryThreshold.new(inf, dead))
 		end
 		
 		def neighbour_names country, names

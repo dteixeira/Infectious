@@ -11,10 +11,7 @@ C.total_people			c, 307067596
 C.number_airports		c, 2
 C.number_ports			c, 2
 C.number_hospitals		c, 1
-C.airport_threshold		c, 0.5, 0.2
-C.port_threshold		c, 0.5, 0.2
-C.hospital_threshold	c, 0.5, 0.2
-C.border_threshold		c, 0.5, 0.2
+C.thresholds			c, 0.3, 0.1
 C.neighbour_names		c, ["Canada", "Mexico"]
 
 # Add country to the application
