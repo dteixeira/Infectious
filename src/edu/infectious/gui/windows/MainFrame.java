@@ -1,7 +1,5 @@
 package edu.infectious.gui.windows;
 
-import java.awt.Point;
-import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -21,9 +19,6 @@ public class MainFrame extends JFrame {
 	}
 
 	private void setupFrame() {
-		setCursor(getToolkit().createCustomCursor(
-				new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB),
-				new Point(0, 0), "null"));
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setUndecorated(true);
@@ -45,6 +40,7 @@ public class MainFrame extends JFrame {
 				new MainFrame().setVisible(true);
 			}
 		});
+		MapPanel.startUpdate();
 	}
 
 }

@@ -1,5 +1,6 @@
 package edu.infectious.gui.listeners;
 
+import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -37,14 +38,33 @@ public class MapManipulationListener implements MouseListener,
 			adjustYBoundary(panel, e.getPoint());
 			panel.setScrollX(currentX);
 			panel.setScrollY(currentY);
-			panel.repaint();
+			
 		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		MapPanel panel = (MapPanel) e.getComponent();
+		
+		// Check if mouse is hovering the menu bar
 		Point p = e.getPoint();
+		if(panel.getLowerBar().contains(p)) {
+			if(!panel.isHoverBar())
+				panel.setCursor(Cursor.getDefaultCursor());
+			panel.setHoverBar(true);
+			panel.setHoverMenuButton(false);
+			if(panel.getMenuButton().getHitBox().contains(p))
+				panel.setHoverMenuButton(true);
+			
+			return;
+		} else {
+			if(panel.isHoverBar())
+				panel.setCursor(panel.getCursor());
+			panel.setHoverBar(false);
+			panel.setHoverMenuButton(false);
+		}
+
+		// If mouse if hovering the map area
 		if (!panel.isZoomed())
 			panel.getTransform().transform(e.getPoint(), p);
 		else {
@@ -64,7 +84,7 @@ public class MapManipulationListener implements MouseListener,
 		for (Hexagon hex : panel.getGridMap()) {
 			if (hex.getHexagon().contains(p)) {
 				panel.setPointer(hex);
-				panel.repaint();
+				
 				break;
 			}
 		}
@@ -102,7 +122,7 @@ public class MapManipulationListener implements MouseListener,
 			panel.setScrollY(currentY);
 			moveX += (currentPoint.getX() - lastPoint.getX());
 			moveY += (currentPoint.getY() - lastPoint.getY());
-			panel.repaint();
+			
 		}
 
 	}
@@ -121,12 +141,11 @@ public class MapManipulationListener implements MouseListener,
 				moveY = 0;
 			}
 			panel.setZoomed(true);
-			panel.repaint();
+			
 		} else if (e.getWheelRotation() > 0) {
 			if (panel.isZoomed())
 				panel.setUnderMousePoint(new Point(0, 0));
 			panel.setZoomed(false);
-			panel.repaint();
 		}
 	}
 
