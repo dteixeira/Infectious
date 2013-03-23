@@ -11,7 +11,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import edu.infectious.gui.utilities.Hexagon;
 import edu.infectious.gui.windows.CountryInfoDialog;
+import edu.infectious.gui.windows.GameMenuDialog;
 import edu.infectious.gui.windows.MapPanel;
+import edu.infectious.script.country.Country;
 
 public class MapManipulationListener implements MouseListener,
 		MouseMotionListener, MouseWheelListener {
@@ -33,6 +35,8 @@ public class MapManipulationListener implements MouseListener,
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		MapPanel panel = (MapPanel) e.getComponent();
+		if(panel.isHoverBar())
+			return;
 		if (panel.isZoomed()) {
 			adjustXBoundary(panel, e.getPoint());
 			adjustYBoundary(panel, e.getPoint());
@@ -93,7 +97,15 @@ public class MapManipulationListener implements MouseListener,
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		MapPanel panel = (MapPanel) e.getComponent();
-		new CountryInfoDialog(panel.getPointer().getCountry()).setVisible(true);
+		if(panel.isHoverBar()) {
+			if(panel.isHoverMenuButton()) {
+				new GameMenuDialog().setVisible(true);
+			}
+		} else {
+			Country country = panel.getPointer().getCountry();
+			if(country != null)
+				new CountryInfoDialog(panel.getPointer().getCountry()).setVisible(true);
+		}
 	}
 
 	@Override
@@ -107,6 +119,8 @@ public class MapManipulationListener implements MouseListener,
 	@Override
 	public void mousePressed(MouseEvent e) {
 		MapPanel panel = (MapPanel) e.getComponent();
+		if(panel.isHoverBar())
+			return;
 		if (panel.isZoomed()) {
 			lastPoint = e.getPoint();
 		}
@@ -115,6 +129,8 @@ public class MapManipulationListener implements MouseListener,
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		MapPanel panel = (MapPanel) e.getComponent();
+		if(panel.isHoverBar())
+			return;
 		if (panel.isZoomed()) {
 			adjustXBoundary(panel, e.getPoint());
 			adjustYBoundary(panel, e.getPoint());
@@ -122,7 +138,6 @@ public class MapManipulationListener implements MouseListener,
 			panel.setScrollY(currentY);
 			moveX += (currentPoint.getX() - lastPoint.getX());
 			moveY += (currentPoint.getY() - lastPoint.getY());
-			
 		}
 
 	}
@@ -130,6 +145,8 @@ public class MapManipulationListener implements MouseListener,
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		MapPanel panel = (MapPanel) e.getComponent();
+		if(panel.isHoverBar())
+			return;
 		if (e.getWheelRotation() < 0) {
 			if (!panel.isZoomed()) {
 				panel.setUnderMousePoint(e.getPoint());
