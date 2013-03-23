@@ -472,4 +472,12 @@ public class MapPanel extends JPanel {
 		return cursor;
 	}
 
+	public double getWidthFactor() {
+		return widthFactor;
+	}
+
+	public double getHeightFactor() {
+		return heightFactor;
+	}
+
 }

@@ -50,6 +50,8 @@ public class MapManipulationListener implements MouseListener,
 	public void mouseMoved(MouseEvent e) {
 		MapPanel panel = (MapPanel) e.getComponent();
 		
+		System.out.println(e.getPoint().x + ", " + e.getPoint().y);
+		
 		// Check if mouse is hovering the menu bar
 		Point p = e.getPoint();
 		if(panel.getLowerBar().contains(p)) {
@@ -69,8 +71,12 @@ public class MapManipulationListener implements MouseListener,
 		}
 
 		// If mouse if hovering the map area
-		if (!panel.isZoomed())
-			panel.getTransform().transform(e.getPoint(), p);
+		if (!panel.isZoomed()) {
+			AffineTransform at = new AffineTransform();
+			at.scale(1.0 / panel.getWidthFactor(), 1.0 / panel.getHeightFactor());
+			at.scale(1.0, 1.0 / panel.getScreenRatioCorrectionFactor());
+			at.transform(e.getPoint(), p);
+		}
 		else {
 			try {
 				panel.getTransform().transform(panel.getUnderMousePoint(), p);
