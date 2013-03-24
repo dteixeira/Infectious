@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import edu.infectious.gui.listeners.MapManipulationListener;
 import edu.infectious.gui.utilities.Button;
 import edu.infectious.gui.utilities.Hexagon;
@@ -33,7 +32,6 @@ import edu.infectious.script.country.CountryState;
 public class MapPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final double FPS_LIMIT = 30;
 	private static final int HORIZONTAL_CELLS = 150;
 	private static final Color GRID_COLOR = new Color(.8f, .8f, .8f, .1f);
 	private static final Color POINTER_LINE_COLOR = new Color(0f, .5f, 1f, 1f);
@@ -85,28 +83,6 @@ public class MapPanel extends JPanel {
 		setupTransform();
 		setupListeners();
 		setupLowerBar();
-	}
-	
-	public static void startUpdate() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Runnable update = new Runnable() {
-					@Override
-					public void run() {
-						MapPanel.getInstance().repaint();
-					}
-				};
-				while(true) {
-					try {
-						SwingUtilities.invokeLater(update);
-						Thread.sleep((int)(1000 / FPS_LIMIT));
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}).run();
 	}
 	
 	private void setupCursor() {

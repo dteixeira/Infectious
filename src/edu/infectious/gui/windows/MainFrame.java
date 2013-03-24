@@ -1,7 +1,6 @@
 package edu.infectious.gui.windows;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import edu.infectious.script.country.Country;
@@ -31,16 +30,6 @@ public class MainFrame extends JFrame {
 	private void setupCountry() {
 		Country.initCountry();
 		MapPanel.getInstance().refreshTurn();
-	}
-
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new MainFrame().setVisible(true);
-			}
-		});
-		MapPanel.startUpdate();
 	}
 
 }

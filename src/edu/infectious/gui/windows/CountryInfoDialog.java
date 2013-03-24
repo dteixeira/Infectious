@@ -19,8 +19,7 @@ public class CountryInfoDialog extends StandardDialog {
 	private static final Color BUTTON_COLOR = new Color(0.149f, 0.451f, 0.925f);
 	private static final Color BUTTON_LINE_COLOR = Color.WHITE;
 	private static final Color BUTTON_HOVER_COLOR = new Color(0.349f, 0.573f, 0.925f);
-	private static final Color COUNTRY_GRID_COLOR = new Color(.7f, .7f, .7f,
-			0.3f);
+	private static final Color COUNTRY_GRID_COLOR = new Color(.7f, .7f, .7f, 0.3f);
 	private static final Color COUNTRY_GRID_LINE_COLOR = new Color(.7f, .7f,
 			.7f, 0.8f);
 	private static final Color TEXT_AREA_COLOR = new Color(.3f, .3f, .3f, .8f);

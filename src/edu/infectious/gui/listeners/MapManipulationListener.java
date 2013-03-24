@@ -49,9 +49,7 @@ public class MapManipulationListener implements MouseListener,
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		MapPanel panel = (MapPanel) e.getComponent();
-		
-		System.out.println(e.getPoint().x + ", " + e.getPoint().y);
-		
+
 		// Check if mouse is hovering the menu bar
 		Point p = e.getPoint();
 		if(panel.getLowerBar().contains(p)) {
