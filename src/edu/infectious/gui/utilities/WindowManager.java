@@ -21,13 +21,13 @@ public abstract class WindowManager {
 	
 	public static void showMainMenu() {
 		stopGameRefresh();
-		mainFrame.setVisible(false);
 		startFrame.setVisible(true);
+		mainFrame.setVisible(false);
 	}
 	
 	public static void showGame() {
-		startFrame.setVisible(false);
 		mainFrame.setVisible(true);
+		startFrame.setVisible(false);
 		startGameRefresh();
 	}
 	
