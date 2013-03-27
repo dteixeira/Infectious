@@ -10,6 +10,8 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import edu.infectious.gui.utilities.Hexagon;
+import edu.infectious.gui.utilities.SoundEffect;
+import edu.infectious.gui.utilities.SoundManager;
 import edu.infectious.gui.windows.CountryInfoDialog;
 import edu.infectious.gui.windows.GameMenuDialog;
 import edu.infectious.gui.windows.MapPanel;
@@ -56,9 +58,12 @@ public class MapManipulationListener implements MouseListener,
 			if(!panel.isHoverBar())
 				panel.setCursor(Cursor.getDefaultCursor());
 			panel.setHoverBar(true);
-			panel.setHoverMenuButton(false);
-			if(panel.getMenuButton().getHitBox().contains(p))
+			if(panel.getMenuButton().getHitBox().contains(p)) {
+				if(!panel.isHoverMenuButton())
+					SoundManager.playSoundEffect(SoundEffect.BUTTON_HOVER);
 				panel.setHoverMenuButton(true);
+			} else
+				panel.setHoverMenuButton(false);
 			
 			return;
 		} else {
@@ -103,12 +108,15 @@ public class MapManipulationListener implements MouseListener,
 		MapPanel panel = (MapPanel) e.getComponent();
 		if(panel.isHoverBar()) {
 			if(panel.isHoverMenuButton()) {
+				SoundManager.playSoundEffect(SoundEffect.DIALOG_OPEN);
 				new GameMenuDialog().setVisible(true);
 			}
 		} else {
 			Country country = panel.getPointer().getCountry();
-			if(country != null)
+			if(country != null) {
+				SoundManager.playSoundEffect(SoundEffect.DIALOG_OPEN);
 				new CountryInfoDialog(panel.getPointer().getCountry()).setVisible(true);
+			}
 		}
 	}
 

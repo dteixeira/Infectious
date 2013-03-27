@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import edu.infectious.gui.listeners.StartFrameListener;
 import edu.infectious.gui.utilities.Button;
+import edu.infectious.gui.utilities.SoundEffect;
+import edu.infectious.gui.utilities.SoundManager;
 
 public class StartFrame extends JFrame {
 
@@ -32,6 +34,8 @@ public class StartFrame extends JFrame {
 	private Button startButton = null;
 	private Button quitButton = null;
 	private JPanel panel = null;
+	private boolean quitButtonHover = false;
+	private boolean startButtonHover = false;
 
 	public StartFrame() {
 		super();
@@ -95,10 +99,22 @@ public class StartFrame extends JFrame {
 	public void handleHover(MouseEvent e) {
 		startButton.setFillColor(BUTTON_COLOR);
 		quitButton.setFillColor(BUTTON_COLOR);
-		if(startButton.isHit(e.getPoint()))
+		if(startButton.isHit(e.getPoint())) {
 			startButton.setFillColor(BUTTON_HOVER_COLOR);
-		else if(quitButton.isHit(e.getPoint()))
+			if(!startButtonHover) {
+				SoundManager.playSoundEffect(SoundEffect.BUTTON_HOVER);
+				startButtonHover = true;
+			}
+		} else if(quitButton.isHit(e.getPoint())) {
 			quitButton.setFillColor(BUTTON_HOVER_COLOR);
+			if(!quitButtonHover) {
+				SoundManager.playSoundEffect(SoundEffect.BUTTON_HOVER);
+				quitButtonHover = true;
+			}
+		} else {
+			quitButtonHover = false;
+			startButtonHover = false;
+		}
 		repaint();
 	}
 	

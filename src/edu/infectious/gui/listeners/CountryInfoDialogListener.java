@@ -4,6 +4,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import edu.infectious.gui.utilities.Button;
+import edu.infectious.gui.utilities.SoundEffect;
+import edu.infectious.gui.utilities.SoundManager;
 import edu.infectious.gui.windows.CountryInfoDialog;
 
 public class CountryInfoDialogListener implements MouseListener, MouseMotionListener {
@@ -28,6 +30,7 @@ public class CountryInfoDialogListener implements MouseListener, MouseMotionList
 		} else if(!dialog.isButtonHover() && button.isHit(e.getPoint())) {
 			dialog.setButtonHover(true);
 			dialog.repaint();
+			SoundManager.playSoundEffect(SoundEffect.BUTTON_HOVER);
 		}
 	}
 

@@ -9,6 +9,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import edu.infectious.gui.listeners.GameMenuDialogListener;
 import edu.infectious.gui.utilities.Button;
+import edu.infectious.gui.utilities.SoundEffect;
+import edu.infectious.gui.utilities.SoundManager;
 
 public class GameMenuDialog extends StandardDialog {
 
@@ -27,6 +29,7 @@ public class GameMenuDialog extends StandardDialog {
 	private Button quitButton = null;
 	private Button endTurnButton = null;
 	private Button traitsButton = null;
+	private boolean hoverButton = false;
 
 	public GameMenuDialog() {
 		super(new Dimension(MENU_WIDTH, MENU_HEIGHT));
@@ -70,14 +73,29 @@ public class GameMenuDialog extends StandardDialog {
 		endTurnButton.setFillColor(BUTTON_COLOR);
 		quitButton.setFillColor(BUTTON_COLOR);
 		closeButton.setFillColor(BUTTON_COLOR);
-		if(traitsButton.isHit(p))
+		boolean hovering = false;
+		if(traitsButton.isHit(p)) {
 			traitsButton.setFillColor(BUTTON_HOVER_COLOR);
-		else if(endTurnButton.isHit(p))
+			hovering = true;
+		}
+		else if(endTurnButton.isHit(p)) {
 			endTurnButton.setFillColor(BUTTON_HOVER_COLOR);
-		else if(quitButton.isHit(p))
+			hovering = true;
+		}
+		else if(quitButton.isHit(p)) {
 			quitButton.setFillColor(BUTTON_HOVER_COLOR);
-		else if(closeButton.isHit(p))
+			hovering = true;
+		}
+		else if(closeButton.isHit(p)) {
 			closeButton.setFillColor(BUTTON_HOVER_COLOR);
+			hovering = true;
+		}
+		else
+			hoverButton = false;
+		if(hovering && !hoverButton) {
+			SoundManager.playSoundEffect(SoundEffect.BUTTON_HOVER);
+			hoverButton = true;
+		}
 		repaint();
 	}
 	

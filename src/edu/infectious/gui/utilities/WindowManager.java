@@ -73,5 +73,6 @@ public abstract class WindowManager {
 	public static void main(String[] args) {
 		initGame();
 		showMainMenu();
+		SoundManager.startBackgroundMusic();
 	}
 }
