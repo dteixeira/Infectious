@@ -43,8 +43,8 @@
         }
 
         public function is_available() {
-            $stmt = $this->db->prepare("SELECT * FROM Match WHERE client1_ip != :ip AND client2_ip IS NULL;");
-            $stmt->execute(array('ip' => $this->client_ip));
+            $stmt = $this->db->prepare("SELECT * FROM Match WHERE client2_ip IS NULL;");
+            $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if(!$row)
                 return false;

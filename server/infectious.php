@@ -1,7 +1,7 @@
 <?php
     include "infectious_request.php";
 
-    $req = new InfectiousRequest($_REQUEST['client_ip']);
+    $req = new InfectiousRequest($_SERVER['REMOTE_ADDR']);
     $req->begin();
     $res = $req->is_available();
     $xml = new DOMDocument("1.0");

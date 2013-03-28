@@ -1,11 +1,11 @@
 package edu.infectious.gui.utilities;
 
+
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,51 +20,24 @@ import org.xml.sax.SAXException;
 public class MatchRequest {
 	
 	private static final String SERVER_NAME = "http://gnomo.fe.up.pt/~ei09086/ppro/infectious.php";
-	
-	private final String clientIp;
-	private final int clientPort;
 	private String opponentIp = "";
-	private int opponentPort = -1;
 	private boolean master = false;
 	
-	public MatchRequest(String clientIp, int clientPort) {
-		this.clientIp = clientIp;
-		this.clientPort = clientPort;
+	public MatchRequest() {
 	}
 	
 	public boolean makeRequest() {
-		DataOutputStream wr;
 		try {
-			// Builds parameter string
-			String params = "client_ip=" + clientIp + ":" + clientPort;
-			
-			// Open and configure connection to server
-			URL url = new URL(SERVER_NAME); 
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();           
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setInstanceFollowRedirects(false); 
-			connection.setRequestMethod("POST"); 
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
-			connection.setRequestProperty("charset", "utf-8");
-			connection.setRequestProperty("Content-Length", "" + Integer.toString(params.getBytes().length));
-			connection.setUseCaches (false);
-			
-			// Send request
-			wr = new DataOutputStream(connection.getOutputStream ());
-			wr.writeBytes(params);
-			wr.flush();
-			wr.close();
-			
-			// Read response
+			// Make request and read response
 			String line, response = "";
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			InputStream input = new URL(SERVER_NAME).openStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			while ((line = reader.readLine()) != null) {
 				response += line;
 			}
 			
 			// Close the connection and parse the response
-			connection.disconnect();
+			input.close();
 			return parseXmlResponse(response);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -86,9 +59,7 @@ public class MatchRequest {
 			else {
 				if(!result.getAttribute("master").equals(""))
 					master = true;
-				String[] ip = result.getTextContent().split(":");
-				opponentIp = ip[0];
-				opponentPort = Integer.parseInt(ip[1]);
+				opponentIp = result.getTextContent();
 				return true;
 			}
 		} catch (SAXException | IOException | ParserConfigurationException e) {
@@ -105,28 +76,12 @@ public class MatchRequest {
 		this.opponentIp = opponentIp;
 	}
 
-	public int getOpponentPort() {
-		return opponentPort;
-	}
-
-	public void setOpponentPort(int opponentPort) {
-		this.opponentPort = opponentPort;
-	}
-
 	public boolean isMaster() {
 		return master;
 	}
 
 	public void setMaster(boolean master) {
 		this.master = master;
-	}
-
-	public String getClientIp() {
-		return clientIp;
-	}
-
-	public int getClientPort() {
-		return clientPort;
 	}
 
 }

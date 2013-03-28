@@ -20,9 +20,11 @@ public class HumidityPanel extends JPanel {
 	private Button aridButton;
 	private Button tropicalButton;
 	private Button mediterraneanButton;
+	private Color backgroundColor;
 	
-	public HumidityPanel() {
+	public HumidityPanel(Color backgroundColor) {
 		super(true);
+		this.backgroundColor = backgroundColor;
 		setupPanel();
 		setupButtons();
 	}
@@ -37,7 +39,7 @@ public class HumidityPanel extends JPanel {
 	}
 
 	private void setupPanel() {
-		setBackground(new Color(0f, 0f, 0f, 0f));
+		setBackground(backgroundColor);
 	}
 	
 	@Override

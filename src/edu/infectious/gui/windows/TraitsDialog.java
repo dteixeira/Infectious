@@ -1,9 +1,8 @@
 package edu.infectious.gui.windows;
 
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import edu.infectious.gui.containers.HumidityPanel;
 import edu.infectious.gui.containers.TemperaturePanel;
 import edu.infectious.gui.containers.TraitPanel;
@@ -29,59 +28,22 @@ public class TraitsDialog extends StandardDialog {
 	}
 
 	private void setupPanels() {
-		GridBagConstraints c;
-		
-		// Transmission panel
-		transmissionPanel = new TransmissionPanel();
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 0.375;
-		c.weighty = 0.4;
-		panel.add(transmissionPanel, c);
-		
-		// Temperature panel
-		temperaturePanel = new TemperaturePanel();
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 0.375;
-		c.weighty = 0.3;
-		panel.add(temperaturePanel, c);
-		
-		// Humidity panel
-		humidityPanel = new HumidityPanel();
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		c.gridheight = 1;
-		c.weightx = 0.375;
-		c.weighty = 0.3;
-		panel.add(humidityPanel, c);
-		
-		// Traits panel
-		traitPanel = new TraitPanel();
-		c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 1;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.gridheight = 3;
-		c.weightx = 0.625;
-		c.weighty = 1.0;
-		panel.add(traitPanel, c);
+		transmissionPanel = new TransmissionPanel(backgroundColor);
+		transmissionPanel.setBounds(0, 0, 300, 240);
+		panel.add(transmissionPanel);
+		temperaturePanel = new TemperaturePanel(backgroundColor);
+		temperaturePanel.setBounds(0, 240, 300, 180);
+		panel.add(temperaturePanel);
+		humidityPanel = new HumidityPanel(backgroundColor);
+		humidityPanel.setBounds(0, 420, 300, 180);
+		panel.add(humidityPanel);
+		traitPanel = new TraitPanel(backgroundColor);
+		traitPanel.setBounds(300, 0, 500, 600);
+		panel.add(traitPanel);
 	}
 
 	private void setupMainPanel() {
-		panel = new JPanel(new GridBagLayout(), true);
+		panel = new JPanel(null, true);
 		panel.setBackground(backgroundColor);
 		getContentPane().add(panel);
 	}
@@ -92,7 +54,13 @@ public class TraitsDialog extends StandardDialog {
 	
 	public static void main(String[] args) {
 		StandardDialog.setupDialogs();
-		new TraitsDialog().setVisible(true);
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				new TraitsDialog().setVisible(true);
+			}
+		});
 	}
 
 }

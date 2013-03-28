@@ -21,9 +21,11 @@ public class TransmissionPanel extends JPanel {
 	private Button waterButton;
 	private Button plagueButton;
 	private Button livestockButton;
+	private Color backgroundColor;
 	
-	public TransmissionPanel() {
+	public TransmissionPanel(Color backgroundColor) {
 		super(true);
+		this.backgroundColor = backgroundColor;
 		setupPanel();
 		setupButtons();
 	}
@@ -40,7 +42,7 @@ public class TransmissionPanel extends JPanel {
 	}
 
 	private void setupPanel() {
-		setBackground(new Color(0f, 0f, 0f, 0f));
+		setBackground(backgroundColor);
 	}
 	
 	@Override

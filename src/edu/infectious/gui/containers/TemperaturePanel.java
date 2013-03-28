@@ -20,9 +20,11 @@ public class TemperaturePanel extends JPanel {
 	private Button hotButton;
 	private Button coldButton;
 	private Button temperateButton;
+	private Color backgroundColor;
 	
-	public TemperaturePanel() {
+	public TemperaturePanel(Color backgroundColor) {
 		super(true);
+		this.backgroundColor = backgroundColor;
 		setupPanel();
 		setupButtons();
 	}
@@ -37,7 +39,7 @@ public class TemperaturePanel extends JPanel {
 	}
 
 	private void setupPanel() {
-		setBackground(new Color(0f, 0f, 0f, 0f));
+		setBackground(backgroundColor);
 	}
 	
 	@Override
