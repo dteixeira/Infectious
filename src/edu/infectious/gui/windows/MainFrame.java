@@ -3,8 +3,6 @@ package edu.infectious.gui.windows;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import edu.infectious.script.country.Country;
-
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -14,7 +12,6 @@ public class MainFrame extends JFrame {
 		setupFrame();
 		setupMapPanel();
 		setupCountry();
-		StandardDialog.setupDialogs();
 	}
 
 	private void setupFrame() {
@@ -28,7 +25,6 @@ public class MainFrame extends JFrame {
 	}
 	
 	private void setupCountry() {
-		Country.initCountry();
 		MapPanel.getInstance().refreshTurn();
 	}
 

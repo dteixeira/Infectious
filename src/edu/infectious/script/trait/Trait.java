@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-
-import edu.infectious.gui.utilities.WindowManager;
 import edu.infectious.logic.PlayerType;
 
 public abstract class Trait {
@@ -51,8 +48,6 @@ public abstract class Trait {
 					System.err.println(" * " + traitList.get(traitList.size() - 1).getName());
 				}
 			}
-			WindowManager.initGame();
-			WindowManager.showGame();
 		} catch (ScriptException | IOException e1) {
 			e1.printStackTrace();
 			System.exit(0);

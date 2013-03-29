@@ -5,13 +5,24 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
 import javax.swing.JPanel;
 import edu.infectious.gui.utilities.Button;
+import edu.infectious.gui.utilities.SoundEffect;
+import edu.infectious.gui.utilities.SoundManager;
+import edu.infectious.logic.Game;
+import edu.infectious.logic.VirusStatistics;
 
 public class TransmissionPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final Color BUTTON_COLOR = new Color(0.149f, 0.451f, 0.925f);
+	private static final Color BUTTON_COLOR = new Color(0.302f, 0.302f, 0.302f);
+	private static final Color BUTTON_HOVER_COLOR = new Color(0.478f, 0.478f, 0.478f);
+	private static final Color BUTTON_BUY_COLOR = new Color(0.149f, 0.451f, 0.925f);
 	private static final Color BUTTON_LINE_COLOR = Color.WHITE;
 	private static final int BUTTON_LINE_WIDTH = 3;
 	private static final int BUTTON_WIDTH = 260;
@@ -22,23 +33,173 @@ public class TransmissionPanel extends JPanel {
 	private Button plagueButton;
 	private Button livestockButton;
 	private Color backgroundColor;
+	private boolean buttonHover = false;
 	
 	public TransmissionPanel(Color backgroundColor) {
 		super(true);
 		this.backgroundColor = backgroundColor;
 		setupPanel();
 		setupButtons();
+		setupListeners();
+	}
+	
+	private void setupListeners() {
+		addMouseMotionListener(new MouseMotionListener() {
+			
+			private void resetButtonColor() {
+				if(VirusStatistics.isAirTransmission())
+					airButton.setFillColor(BUTTON_BUY_COLOR);
+				else
+					airButton.setFillColor(BUTTON_COLOR);
+				if(VirusStatistics.isWaterTransmission())
+					waterButton.setFillColor(BUTTON_BUY_COLOR);
+				else
+					waterButton.setFillColor(BUTTON_COLOR);
+				if(VirusStatistics.isPlagueTransmission())
+					plagueButton.setFillColor(BUTTON_BUY_COLOR);
+				else
+					plagueButton.setFillColor(BUTTON_COLOR);
+				if(VirusStatistics.isLivestockTransmission())
+					livestockButton.setFillColor(BUTTON_BUY_COLOR);
+				else
+					livestockButton.setFillColor(BUTTON_COLOR);
+			}
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				resetButtonColor();
+				boolean hovered = false;
+				Point p = e.getPoint();
+				if(airButton.isHit(p)) {
+					if(!VirusStatistics.isAirTransmission()) {
+						airButton.setFillColor(BUTTON_HOVER_COLOR);
+						hovered = true;
+					}
+				} else if(waterButton.isHit(p)) {
+					if(!VirusStatistics.isWaterTransmission()) {
+						waterButton.setFillColor(BUTTON_HOVER_COLOR);
+						hovered = true;
+					}
+				} else if(plagueButton.isHit(p)) {
+					if(!VirusStatistics.isPlagueTransmission()) {
+						plagueButton.setFillColor(BUTTON_HOVER_COLOR);
+						hovered = true;
+					}
+				} else if(livestockButton.isHit(p)) {
+					if(!VirusStatistics.isLivestockTransmission()) {
+						livestockButton.setFillColor(BUTTON_HOVER_COLOR);
+						hovered = true;
+					}
+				}
+				if(hovered && !buttonHover) {
+					SoundManager.playSoundEffect(SoundEffect.BUTTON_HOVER);
+					buttonHover = true;
+				} else if(!hovered) {
+					buttonHover = false;
+				}
+				TransmissionPanel.this.getParent().getParent().repaint();
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent e) {
+			}
+		});
+		addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Point p = e.getPoint();
+				if(airButton.isHit(p)) {
+					handleAir();
+				} else if(waterButton.isHit(p)) {
+					handleWater();
+				} else if(plagueButton.isHit(p)) {
+					handlePlague();
+				} else if(livestockButton.isHit(p)) {
+					handleLivestock();
+				}
+				TransmissionPanel.this.getParent().getParent().repaint();
+			}
+		});
+	}
+	
+	private void handleAir() {
+		if(!VirusStatistics.isAirTransmission()) {
+			if(Game.getPlayer().isAffordable(VirusStatistics.getAirTransmissionCost())) {
+				VirusStatistics.setAirTransmission(true);
+				Game.getPlayer().spendPoints(VirusStatistics.getAirTransmissionCost());
+				airButton.setText("Air");
+				airButton.setFillColor(BUTTON_BUY_COLOR);
+			}
+		}
+	}
+	
+	private void handleWater() {
+		if(!VirusStatistics.isWaterTransmission()) {
+			if(Game.getPlayer().isAffordable(VirusStatistics.getWaterTransmissionCost())) {
+				VirusStatistics.setWaterTransmission(true);
+				Game.getPlayer().spendPoints(VirusStatistics.getWaterTransmissionCost());
+				waterButton.setText("Water");
+				waterButton.setFillColor(BUTTON_BUY_COLOR);
+			}
+		}
+	}
+	
+	private void handlePlague() {
+		if(!VirusStatistics.isPlagueTransmission()) {
+			if(Game.getPlayer().isAffordable(VirusStatistics.getPlagueTransmissionCost())) {
+				VirusStatistics.setPlagueTransmission(true);
+				Game.getPlayer().spendPoints(VirusStatistics.getPlagueTransmissionCost());
+				plagueButton.setText("Plague");
+				plagueButton.setFillColor(BUTTON_BUY_COLOR);
+			}
+		}
+	}
+	
+	private void handleLivestock() {
+		if(!VirusStatistics.isLivestockTransmission()) {
+			if(Game.getPlayer().isAffordable(VirusStatistics.getLivestockTransmissionCost())) {
+				VirusStatistics.setLivestockTransmission(true);
+				Game.getPlayer().spendPoints(VirusStatistics.getLivestockTransmissionCost());
+				livestockButton.setText("Livestock");
+				livestockButton.setFillColor(BUTTON_BUY_COLOR);
+			}
+		}
 	}
 	
 	private void setupButtons() {
 		airButton = new Button(20, 50, BUTTON_WIDTH, BUTTON_HEIGHT,
-				BUTTON_LINE_WIDTH, "Buy", BUTTON_COLOR, BUTTON_LINE_COLOR);
+				BUTTON_LINE_WIDTH, "Air ("
+						+ VirusStatistics.getAirTransmissionCost() + ")",
+				BUTTON_COLOR, BUTTON_LINE_COLOR);
 		waterButton = new Button(20, 95, BUTTON_WIDTH, BUTTON_HEIGHT,
-				BUTTON_LINE_WIDTH, "Buy", BUTTON_COLOR, BUTTON_LINE_COLOR);
+				BUTTON_LINE_WIDTH, "Water ("
+						+ VirusStatistics.getWaterTransmissionCost() + ")",
+				BUTTON_COLOR, BUTTON_LINE_COLOR);
 		plagueButton = new Button(20, 140, BUTTON_WIDTH, BUTTON_HEIGHT,
-				BUTTON_LINE_WIDTH, "Buy", BUTTON_COLOR, BUTTON_LINE_COLOR);
+				BUTTON_LINE_WIDTH, "Plague ("
+						+ VirusStatistics.getPlagueTransmissionCost() + ")",
+				BUTTON_COLOR, BUTTON_LINE_COLOR);
 		livestockButton = new Button(20, 185, BUTTON_WIDTH, BUTTON_HEIGHT,
-				BUTTON_LINE_WIDTH, "Buy", BUTTON_COLOR, BUTTON_LINE_COLOR);
+				BUTTON_LINE_WIDTH, "Livestock ("
+						+ VirusStatistics.getLivestockTransmissionCost() + ")",
+				BUTTON_COLOR, BUTTON_LINE_COLOR);
 	}
 
 	private void setupPanel() {

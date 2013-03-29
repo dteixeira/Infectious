@@ -14,7 +14,7 @@ public abstract class WindowManager {
 	private static Thread refreshThread = null;
 	private static boolean gameRefresh = false;
 
-	public static void initGame() {
+	public static void initWindows() {
 		startFrame = new StartFrame();
 		mainFrame = new MainFrame();
 	}
@@ -71,7 +71,7 @@ public abstract class WindowManager {
 	}
 	
 	public static void main(String[] args) {
-		initGame();
+		//initGame();
 		showMainMenu();
 		SoundManager.startBackgroundMusic();
 	}

@@ -7,8 +7,7 @@ import edu.infectious.script.country.CountryClimateHumidity;
 import edu.infectious.script.country.CountryClimateTemperature;
 
 public abstract class VirusStatistics {
-	
-	private static final int CURE_N_TURNS = 50;
+
 	private static final double CLIMATE_LEVEL_INCREMENT = 0.25;
 	private static final int MAX_CLIMATE_LEVEL = 4;
 	
@@ -19,6 +18,14 @@ public abstract class VirusStatistics {
 	private static boolean airTransmission = false;
 	private static boolean plagueTransmission = false;
 	private static boolean livestockTransmission = false;
+	private static int waterTransmissionCost = 20;
+	private static int airTransmissionCost = 20;
+	private static int plagueTransmissionCost = 15;
+	private static int livestockTransmissionCost = 15;
+	private static int level1Cost = 3;
+	private static int level2Cost = 5;
+	private static int level3Cost = 8;
+	private static int level4Cost = 12;
 	private static Map<CountryClimateTemperature, Integer> temperatureBonus = null;
 	private static Map<CountryClimateHumidity, Integer> humidityBonus = null;
 	
@@ -122,12 +129,76 @@ public abstract class VirusStatistics {
 		return humidityBonus.get(humidity) * CLIMATE_LEVEL_INCREMENT;
 	}
 	
+	public static boolean isMaxTemperatureLevel(CountryClimateTemperature temperature) {
+		return temperatureBonus.get(temperature) == MAX_CLIMATE_LEVEL;
+	}
+	
+	public static boolean isMaxHumidityLevel(CountryClimateHumidity humidity) {
+		return humidityBonus.get(humidity) == MAX_CLIMATE_LEVEL;
+	}
+	
+	public static int getTemperatureLevel(CountryClimateTemperature temperature) {
+		return temperatureBonus.get(temperature);
+	}
+	
+	public static int getHumidityLevel(CountryClimateHumidity humidity) {
+		return humidityBonus.get(humidity);
+	}
+	
 	public static void incrementTemperatureBonus(CountryClimateTemperature temperature) {
 		temperatureBonus.put(temperature, Math.min(temperatureBonus.get(temperature) + 1, MAX_CLIMATE_LEVEL));
 	}
 	
 	public static void incrementHumidityBonus(CountryClimateHumidity humidity) {
-		humidityBonus.put(humidity, Math.min(temperatureBonus.get(humidity) + 1, MAX_CLIMATE_LEVEL));
+		humidityBonus.put(humidity, Math.min(humidityBonus.get(humidity) + 1, MAX_CLIMATE_LEVEL));
+	}
+
+	public static int getWaterTransmissionCost() {
+		return waterTransmissionCost;
+	}
+
+	public static int getAirTransmissionCost() {
+		return airTransmissionCost;
+	}
+
+	public static int getPlagueTransmissionCost() {
+		return plagueTransmissionCost;
+	}
+
+	public static int getLivestockTransmissionCost() {
+		return livestockTransmissionCost;
+	}
+
+	public static int getLevel1Cost() {
+		return level1Cost;
+	}
+
+	public static void setLevel1Cost(int level1Cost) {
+		VirusStatistics.level1Cost = level1Cost;
+	}
+
+	public static int getLevel2Cost() {
+		return level2Cost;
+	}
+
+	public static void setLevel2Cost(int level2Cost) {
+		VirusStatistics.level2Cost = level2Cost;
+	}
+
+	public static int getLevel3Cost() {
+		return level3Cost;
+	}
+
+	public static void setLevel3Cost(int level3Cost) {
+		VirusStatistics.level3Cost = level3Cost;
+	}
+
+	public static int getLevel4Cost() {
+		return level4Cost;
+	}
+
+	public static void setLevel4Cost(int level4Cost) {
+		VirusStatistics.level4Cost = level4Cost;
 	}
 
 }

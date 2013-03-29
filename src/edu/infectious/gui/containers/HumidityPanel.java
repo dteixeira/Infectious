@@ -5,13 +5,24 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 import edu.infectious.gui.utilities.Button;
+import edu.infectious.gui.utilities.SoundEffect;
+import edu.infectious.gui.utilities.SoundManager;
+import edu.infectious.logic.Game;
+import edu.infectious.logic.VirusStatistics;
+import edu.infectious.script.country.CountryClimateHumidity;
 
 public class HumidityPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static final Color BUTTON_COLOR = new Color(0.149f, 0.451f, 0.925f);
+	private static final Color BUTTON_COLOR = new Color(0.302f, 0.302f, 0.302f);
+	private static final Color BUTTON_HOVER_COLOR = new Color(0.478f, 0.478f, 0.478f);
+	private static final Color BUTTON_BUY_COLOR = new Color(0.149f, 0.451f, 0.925f);
 	private static final Color BUTTON_LINE_COLOR = Color.WHITE;
 	private static final int BUTTON_LINE_WIDTH = 3;
 	private static final int BUTTON_WIDTH = 260;
@@ -21,21 +32,222 @@ public class HumidityPanel extends JPanel {
 	private Button tropicalButton;
 	private Button mediterraneanButton;
 	private Color backgroundColor;
+	private boolean buttonHover = false;
 	
 	public HumidityPanel(Color backgroundColor) {
 		super(true);
 		this.backgroundColor = backgroundColor;
 		setupPanel();
 		setupButtons();
+		setupListeners();
+	}
+	
+	private void setupListeners() {
+		addMouseMotionListener(new MouseMotionListener() {
+			
+			private void resetButtonColor() {
+				if(VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.ARID))
+					aridButton.setFillColor(BUTTON_BUY_COLOR);
+				else
+					aridButton.setFillColor(BUTTON_COLOR);
+				if(VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.TROPICAL))
+					tropicalButton.setFillColor(BUTTON_BUY_COLOR);
+				else
+					tropicalButton.setFillColor(BUTTON_COLOR);
+				if(VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.MEDITERRANEAN))
+					mediterraneanButton.setFillColor(BUTTON_BUY_COLOR);
+				else
+					mediterraneanButton.setFillColor(BUTTON_COLOR);
+			}
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				resetButtonColor();
+				boolean hovered = false;
+				Point p = e.getPoint();
+				if(aridButton.isHit(p)) {
+					if(!VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.ARID)) {
+						aridButton.setFillColor(BUTTON_HOVER_COLOR);
+						hovered = true;
+					}
+				} else if(tropicalButton.isHit(p)) {
+					if(!VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.TROPICAL)) {
+						tropicalButton.setFillColor(BUTTON_HOVER_COLOR);
+						hovered = true;
+					}
+				} else if(mediterraneanButton.isHit(p)) {
+					if(!VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.MEDITERRANEAN)) {
+						mediterraneanButton.setFillColor(BUTTON_HOVER_COLOR);
+						hovered = true;
+					}
+				}
+				if(hovered && !buttonHover) {
+					SoundManager.playSoundEffect(SoundEffect.BUTTON_HOVER);
+					buttonHover = true;
+				} else if(!hovered) {
+					buttonHover = false;
+				}
+				HumidityPanel.this.getParent().getParent().repaint();
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent e) {
+			}
+		});
+		addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Point p = e.getPoint();
+				if(aridButton.isHit(p)) {
+					handleArid();
+				} else if(tropicalButton.isHit(p)) {
+					handleTropical();
+				} else if(mediterraneanButton.isHit(p)) {
+					handleMediterranean();
+				}
+				HumidityPanel.this.getParent().getParent().repaint();
+			}
+		});
+	}
+	
+	private void handleArid() {
+		if(!VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.ARID)) {
+			switch(VirusStatistics.getHumidityLevel(CountryClimateHumidity.ARID)) {
+			case 0:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel1Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.ARID);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel1Cost());
+					aridButton.setText("Arid level 2 (" + VirusStatistics.getLevel2Cost() + ")");
+				}
+				break;
+			case 1:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel2Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.ARID);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel2Cost());
+					aridButton.setText("Arid level 3 (" + VirusStatistics.getLevel3Cost() + ")");
+				}
+				break;
+			case 2:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel3Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.ARID);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel3Cost());
+					aridButton.setText("Arid level 4 (" + VirusStatistics.getLevel4Cost() + ")");
+				}
+				break;
+			case 3:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel4Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.ARID);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel4Cost());
+					aridButton.setText("Arid max level");
+					aridButton.setFillColor(BUTTON_BUY_COLOR);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+	private void handleTropical() {
+		if(!VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.TROPICAL)) {
+			switch(VirusStatistics.getHumidityLevel(CountryClimateHumidity.TROPICAL)) {
+			case 0:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel1Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.TROPICAL);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel1Cost());
+					tropicalButton.setText("Tropical level 2 (" + VirusStatistics.getLevel2Cost() + ")");
+				}
+				break;
+			case 1:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel2Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.TROPICAL);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel2Cost());
+					tropicalButton.setText("Tropical level 3 (" + VirusStatistics.getLevel3Cost() + ")");
+				}
+				break;
+			case 2:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel3Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.TROPICAL);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel3Cost());
+					tropicalButton.setText("Tropical level 4 (" + VirusStatistics.getLevel4Cost() + ")");
+				}
+				break;
+			case 3:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel4Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.TROPICAL);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel4Cost());
+					tropicalButton.setText("Tropical max level");
+					tropicalButton.setFillColor(BUTTON_BUY_COLOR);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
+	private void handleMediterranean() {
+		if(!VirusStatistics.isMaxHumidityLevel(CountryClimateHumidity.MEDITERRANEAN)) {
+			switch(VirusStatistics.getHumidityLevel(CountryClimateHumidity.MEDITERRANEAN)) {
+			case 0:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel1Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.MEDITERRANEAN);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel1Cost());
+					mediterraneanButton.setText("Mediterranean level 2 (" + VirusStatistics.getLevel2Cost() + ")");
+				}
+				break;
+			case 1:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel2Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.MEDITERRANEAN);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel2Cost());
+					mediterraneanButton.setText("Mediterranean level 3 (" + VirusStatistics.getLevel3Cost() + ")");
+				}
+				break;
+			case 2:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel3Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.MEDITERRANEAN);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel3Cost());
+					mediterraneanButton.setText("Mediterranean level 4 (" + VirusStatistics.getLevel4Cost() + ")");
+				}
+				break;
+			case 3:
+				if(Game.getPlayer().isAffordable(VirusStatistics.getLevel4Cost())) {
+					VirusStatistics.incrementHumidityBonus(CountryClimateHumidity.MEDITERRANEAN);
+					Game.getPlayer().spendPoints(VirusStatistics.getLevel4Cost());
+					mediterraneanButton.setText("Mediterranean max level");
+					mediterraneanButton.setFillColor(BUTTON_BUY_COLOR);
+				}
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	
 	private void setupButtons() {
 		aridButton = new Button(20, 50, BUTTON_WIDTH, BUTTON_HEIGHT,
-				BUTTON_LINE_WIDTH, "Buy", BUTTON_COLOR, BUTTON_LINE_COLOR);
+				BUTTON_LINE_WIDTH, "Arid level 1 (" + VirusStatistics.getLevel1Cost() + ")", BUTTON_COLOR, BUTTON_LINE_COLOR);
 		tropicalButton = new Button(20, 90, BUTTON_WIDTH, BUTTON_HEIGHT,
-				BUTTON_LINE_WIDTH, "Buy", BUTTON_COLOR, BUTTON_LINE_COLOR);
+				BUTTON_LINE_WIDTH, "Tropical level 1 (" + VirusStatistics.getLevel1Cost() + ")", BUTTON_COLOR, BUTTON_LINE_COLOR);
 		mediterraneanButton = new Button(20, 130, BUTTON_WIDTH, BUTTON_HEIGHT,
-				BUTTON_LINE_WIDTH, "Buy", BUTTON_COLOR, BUTTON_LINE_COLOR);
+				BUTTON_LINE_WIDTH, "Mediterranean level 1 (" + VirusStatistics.getLevel1Cost() + ")", BUTTON_COLOR, BUTTON_LINE_COLOR);
 	}
 
 	private void setupPanel() {

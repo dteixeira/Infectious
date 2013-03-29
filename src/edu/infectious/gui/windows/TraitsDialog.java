@@ -7,6 +7,9 @@ import edu.infectious.gui.containers.HumidityPanel;
 import edu.infectious.gui.containers.TemperaturePanel;
 import edu.infectious.gui.containers.TraitPanel;
 import edu.infectious.gui.containers.TransmissionPanel;
+import edu.infectious.gui.utilities.MatchRequest;
+import edu.infectious.gui.utilities.SoundManager;
+import edu.infectious.logic.Game;
 
 public class TraitsDialog extends StandardDialog {
 
@@ -53,7 +56,8 @@ public class TraitsDialog extends StandardDialog {
 	}
 	
 	public static void main(String[] args) {
-		StandardDialog.setupDialogs();
+		Game.initGame(new MatchRequest());
+		SoundManager.startBackgroundMusic();
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
