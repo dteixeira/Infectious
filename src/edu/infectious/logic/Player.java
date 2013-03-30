@@ -11,7 +11,7 @@ public class Player {
 	private TraitType playerType;
 	
 	public Player(TraitType playerType) {
-		playerPoints = 0;
+		playerPoints = 30;
 		this.playerType = playerType;
 	}
 	

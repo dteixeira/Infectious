@@ -1,4 +1,4 @@
-class Cough < TraitKlass
+class CoughSyrup < TraitKlass
 
   def initialize
     # Calls super class constructor and resets
@@ -32,4 +32,4 @@ class Cough < TraitKlass
 end
 
 # Add object to the traits list
-Cough.new.add
+CoughSyrup.new.add

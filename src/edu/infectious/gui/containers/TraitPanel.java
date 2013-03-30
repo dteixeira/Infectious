@@ -129,11 +129,13 @@ public class TraitPanel extends JPanel {
 			if(Game.getPlayer().isAffordable(currentTrait.getDeactivationCost())) {
 				Game.getPlayer().spendPoints(currentTrait.getDeactivationCost());
 				currentTrait.setInEffect(false);
+				currentTrait.removeEffect();
 			}
 		} else {
 			if(Game.getPlayer().isAffordable(currentTrait.getActivationCost())) {
 				Game.getPlayer().spendPoints(currentTrait.getActivationCost());
 				currentTrait.setInEffect(true);
+				currentTrait.applyEffect();
 			}
 		}
 		TraitPanel.this.getParent().getParent().repaint();

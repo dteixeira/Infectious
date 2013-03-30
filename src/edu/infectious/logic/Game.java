@@ -3,6 +3,7 @@ package edu.infectious.logic;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import javax.swing.SwingWorker;
 
@@ -15,12 +16,15 @@ import edu.infectious.gui.windows.StandardMessageDialog;
 import edu.infectious.script.country.Country;
 import edu.infectious.script.country.CountryClimateHumidity;
 import edu.infectious.script.country.CountryClimateTemperature;
+import edu.infectious.script.country.CountryState;
+import edu.infectious.script.country.CountryType;
 import edu.infectious.script.trait.Trait;
 import edu.infectious.script.trait.TraitType;
 
 public class Game {
 	
 	private static final int CURE_N_TURNS = 50;
+	private static final int TURNS_TO_DEATH = 10;
 	private static Player player;
 	private static MatchRequest request;
 	private static int turnNumber;
@@ -111,15 +115,106 @@ public class Game {
 			endTurnSlave();
 	}
 	
+	private static void updateTurn(SlavePackage slave) {
+		// Calculate base values
+		VirusStatistics.setInfectiousness(VirusStatistics.getInfectiousnessDelta() + slave.getInfectiousnessDelta());
+		VirusStatistics.setDeadliness(VirusStatistics.getDeadlinessDelta() + slave.getDeadlinessDelta());
+		VirusStatistics.setNotoriety(VirusStatistics.getNotorietyDelta() + slave.getNotorietyDelta());
+		VirusStatistics.normalizeValues();
+		
+		// Infect new people
+		for(Country c : Country.getCountryList()) {
+			if(c.getState() == CountryState.INFECTED) {
+				double water = VirusStatistics.isWaterTransmission() ? 0.1 : 0.0;
+				double air = VirusStatistics.isAirTransmission() ? 0.1 : 0.0;
+				double specific = (VirusStatistics.isLivestockTransmission() && c.getType() == CountryType.RURAL) ||
+						(VirusStatistics.isPlagueTransmission() && c.getType() == CountryType.INDUSTRIAL) ? 0.05 : 0.0;
+				double bonus = 1.0 + water + air + specific;
+				double penalty = Math.sqrt(VirusStatistics.getInfectiousness() * 
+						VirusStatistics.getTemperatureBonus(c.getTemperature()) *
+						VirusStatistics.getHumidityBonus(c.getHumidity()));
+				int newInfected = Math.min(
+						c.getHealtyPeople(),
+						(int) Math.ceil(c.getInfectedPeople() * bonus
+								* penalty) * 2);
+				c.setHealtyPeople(c.getHealtyPeople() - newInfected);
+				c.setInfectedPeople(c.getInfectedPeople() + newInfected);
+			}
+		}
+		
+		// Kill people
+		if (turnNumber >= TURNS_TO_DEATH) {
+			for (Country c : Country.getCountryList()) {
+				int newDead = Math.min(
+						c.getInfectedPeople(),
+						(int) Math.ceil(c.getInfectedPeople()
+								* VirusStatistics.getDeadliness()));
+				c.setDeadPeople(c.getDeadPeople() + newDead);
+				c.setInfectedPeople(c.getInfectedPeople() - newDead);
+			}
+		}
+
+		// Infect new countries
+		ArrayList<Country> toInfect = new ArrayList<Country>();
+		for (Country c : Country.getCountryList()) {
+			if (c.getInfectedPeople() == 0 && c.getAlivePeople() > 0) {
+				double penalty = VirusStatistics.getTemperatureBonus(c
+						.getTemperature())
+						* VirusStatistics.getHumidityBonus(c.getHumidity());
+				if (penalty == 0.0)
+					continue;
+				double prob = 0.0;
+				if (!c.isClosedAirports())
+					prob += 0.05;
+				if (!c.isClosedBorders())
+					prob += 0.05;
+				for (Country nbr : c.getNeighbourCountries()) {
+					if (nbr.getInfectedPeople() > 0) {
+						prob += 0.1;
+						break;
+					}
+				}
+				if (Math.random() < prob) {
+					toInfect.add(c);
+				}
+			}
+		}
+		for (Country c : toInfect) {
+			c.setHealtyPeople(c.getHealtyPeople() - 1);
+			c.setInfectedPeople(1);
+		}
+		
+		// Update turns to cure
+		turnsToCure--;
+		
+		// Update country states
+		for(Country c : Country.getCountryList()) {
+			if(c.getDeadPeople() > 0)
+				c.setState(CountryState.DEAD);
+			else if(c.getInfectedPeople() > 0 && c.getAlivePeople() > 0)
+				c.setState(CountryState.INFECTED);
+			else if(c.getInfectedPeople() == 0 && c.getAlivePeople() > 0)
+				c.setState(CountryState.OK);
+			if (c.getDeadPeople() / (double) c.getTotalPeople() > c.getThresholds()
+					.getDeadThreshold()
+					|| c.getInfectedPeople() / (double) c.getTotalPeople() > c
+							.getThresholds().getInfectedThreshold()) {
+				c.setClosedAirports(true);
+				c.setClosedBorders(true);
+				c.setClosedHospitals(true);
+				c.setClosedPorts(true);
+			}
+		}
+	}
+	
 	private static void endTurnMaster() {
 		try {
 			// Receive slave package
 			ObjectInputStream in = new ObjectInputStream(request.getSocket().getInputStream());
 			SlavePackage response = (SlavePackage) in.readObject();
-			
-			// TODO
+
 			// Update info
-			// updateTurn(response);
+			updateTurn(response);
 			
 			// Build master package
 			MasterPackage pkg = new MasterPackage();
@@ -139,6 +234,7 @@ public class Game {
 			pkg.setMediterraneanLevel(VirusStatistics.getHumidityLevel(CountryClimateHumidity.MEDITERRANEAN));
 			
 			// End game
+			// TODO
 			// checkGameOver(pkg);
 			
 			// Send package to slave
@@ -171,6 +267,11 @@ public class Game {
 			// Receive master package
 			ObjectInputStream in = new ObjectInputStream(request.getSocket().getInputStream());
 			MasterPackage response = (MasterPackage) in.readObject();
+			
+			// Update base values
+			VirusStatistics.setInfectiousness(response.getInfectiousness());
+			VirusStatistics.setDeadliness(response.getDeadliness());
+			VirusStatistics.setNotoriety(response.getNotoriety());
 			
 			// Update bonus data
 			VirusStatistics.setAirTransmission(response.isAir());

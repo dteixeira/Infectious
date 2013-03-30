@@ -9,11 +9,9 @@ import java.io.StringReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -51,10 +49,11 @@ public class MatchRequest {
 	}
 	
 	public boolean connectToOpponent() {
+		ServerSocket server = null;
 		try {
 			// Act as server
 			if(master) {
-				ServerSocket server = new ServerSocket(SERVER_PORT);
+				server = new ServerSocket(SERVER_PORT);
 				server.setSoTimeout(15000);
 				socket = server.accept();
 				server.close();
@@ -65,6 +64,12 @@ public class MatchRequest {
 			}
 			return true;
 		} catch (Exception e) {
+			if(server != null)
+				try {
+					server.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			e.printStackTrace();
 			return false;
 		}

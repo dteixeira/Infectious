@@ -7,10 +7,12 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import edu.infectious.gui.listeners.GameMenuDialogListener;
 import edu.infectious.gui.utilities.Button;
 import edu.infectious.gui.utilities.SoundEffect;
 import edu.infectious.gui.utilities.SoundManager;
+import edu.infectious.logic.Game;
 
 public class GameMenuDialog extends StandardDialog {
 
@@ -120,11 +122,22 @@ public class GameMenuDialog extends StandardDialog {
 	}
 
 	private void handleEndTurn() {
-		// TODO Auto-generated method stub
+		final StandardMessageDialog message = new StandardMessageDialog("Waiting for opponent...", 30);
+		new SwingWorker<Integer, String> () {
+			@Override
+			protected Integer doInBackground() throws Exception {
+				Game.endTurn();
+				message.setVisible(false);
+				return null;
+			}
+		}.execute();
+		dispose();
+		message.setVisible(true);
 	}
 
 	private void handleTraits() {
 		dispose();
+		SoundManager.playSoundEffect(SoundEffect.DIALOG_OPEN);
 		new TraitsDialog().setVisible(true);
 	}
 
