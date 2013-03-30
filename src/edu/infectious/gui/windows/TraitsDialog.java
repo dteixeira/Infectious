@@ -2,14 +2,10 @@ package edu.infectious.gui.windows;
 
 import java.awt.Dimension;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import edu.infectious.gui.containers.HumidityPanel;
 import edu.infectious.gui.containers.TemperaturePanel;
 import edu.infectious.gui.containers.TraitPanel;
 import edu.infectious.gui.containers.TransmissionPanel;
-import edu.infectious.gui.utilities.MatchRequest;
-import edu.infectious.gui.utilities.SoundManager;
-import edu.infectious.logic.Game;
 
 public class TraitsDialog extends StandardDialog {
 
@@ -53,18 +49,6 @@ public class TraitsDialog extends StandardDialog {
 
 	private void setupDialog() {
 		setOpacity(0.9f);
-	}
-	
-	public static void main(String[] args) {
-		Game.initGame(new MatchRequest());
-		SoundManager.startBackgroundMusic();
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				new TraitsDialog().setVisible(true);
-			}
-		});
 	}
 
 }

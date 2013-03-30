@@ -1,14 +1,16 @@
 package edu.infectious.logic;
 
+import edu.infectious.script.trait.TraitType;
+
 public class Player {
 
 	private static final int TURN_POINTS_INC = 5;
 	private static final int MAX_POINTS = 30;
 	
 	private int playerPoints;
-	private PlayerType playerType;
+	private TraitType playerType;
 	
-	public Player(PlayerType playerType) {
+	public Player(TraitType playerType) {
 		playerPoints = 0;
 		this.playerType = playerType;
 	}
@@ -35,7 +37,7 @@ public class Player {
 		return playerPoints;
 	}
 
-	public PlayerType getPlayerType() {
+	public TraitType getPlayerType() {
 		return playerType;
 	}
 	

@@ -1,7 +1,10 @@
 package edu.infectious.script.country;
 
-public class CountryThreshold {
+import java.io.Serializable;
+
+public class CountryThreshold implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private double infectedThreshold;
 	private double deadThreshold;
 	

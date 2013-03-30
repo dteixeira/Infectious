@@ -25,6 +25,7 @@ import edu.infectious.gui.listeners.MapManipulationListener;
 import edu.infectious.gui.utilities.Button;
 import edu.infectious.gui.utilities.Hexagon;
 import edu.infectious.gui.utilities.HexagonFactory;
+import edu.infectious.logic.Game;
 import edu.infectious.logic.VirusStatistics;
 import edu.infectious.script.country.Country;
 import edu.infectious.script.country.CountryState;
@@ -259,6 +260,7 @@ public class MapPanel extends JPanel {
 		menuButton.paintButton(g2d);
 
 		// Draw point counter
+		pointsCounter.setText("" + Game.getPlayer().getPlayerPoints());
 		pointsCounter.paintButton(g2d);
 
 		// Draw stat bars
@@ -306,7 +308,7 @@ public class MapPanel extends JPanel {
 		g2d.drawString(text, textX, textY);
 	}
 
-	private void createTurnBackground() {
+	public void createTurnBackground() {
 		if (turnBackground == null)
 			turnBackground = new BufferedImage(background.getWidth(),
 					background.getHeight(), background.getType());

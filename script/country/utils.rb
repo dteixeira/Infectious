@@ -51,6 +51,7 @@ module CModule
 		def total_people country, people
 			country.setTotalPeople(people)
 			country.setAlivePeople(people)
+			country.setHealtyPeople(people)
 		end
 		
 		def number_ports country, ports

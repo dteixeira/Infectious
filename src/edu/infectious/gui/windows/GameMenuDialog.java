@@ -124,7 +124,8 @@ public class GameMenuDialog extends StandardDialog {
 	}
 
 	private void handleTraits() {
-		// TODO Auto-generated method stub	
+		dispose();
+		new TraitsDialog().setVisible(true);
 	}
 
 	private void setupPanel() {

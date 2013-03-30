@@ -51,4 +51,12 @@ public class StandardMessageDialog extends StandardDialog {
 		getContentPane().add(panel);
 	}
 
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public void setFontSize(int fontSize) {
+		this.fontSize = fontSize;
+	}
+
 }

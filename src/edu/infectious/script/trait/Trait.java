@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import edu.infectious.logic.PlayerType;
 
 public abstract class Trait {
 	
@@ -18,7 +17,7 @@ public abstract class Trait {
 	private boolean inEffect;
 	private int activationCost;
 	private int deactivationCost;
-	private PlayerType type;
+	private TraitType type;
 	private String name;
 	private String description;
 	
@@ -28,7 +27,17 @@ public abstract class Trait {
 		deactivationCost = 0;
 		name = "";
 		description = "";
-		type = PlayerType.VIRUS;
+		type = TraitType.VIRUS;
+	}
+	
+	private void resetTrait() {
+		inEffect = false;
+	}
+	
+	public static void resetTraits() {
+		for(Trait t : traitList) {
+			t.resetTrait();
+		}
 	}
 	
 	public static void initTrait() {
@@ -86,11 +95,11 @@ public abstract class Trait {
 		return traitList;
 	}
 
-	public PlayerType getType() {
+	public TraitType getType() {
 		return type;
 	}
 
-	public void setType(PlayerType type) {
+	public void setType(TraitType type) {
 		this.type = type;
 	}
 

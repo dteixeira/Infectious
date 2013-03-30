@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,8 +22,11 @@ import org.xml.sax.SAXException;
 public class MatchRequest {
 	
 	private static final String SERVER_NAME = "http://gnomo.fe.up.pt/~ei09086/ppro/infectious.php";
+	private static final int SERVER_PORT = 6882;
+
 	private String opponentIp = "";
 	private boolean master = false;
+	private Socket socket = null;
 	
 	public MatchRequest() {
 	}
@@ -40,6 +45,26 @@ public class MatchRequest {
 			input.close();
 			return parseXmlResponse(response);
 		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean connectToOpponent() {
+		try {
+			// Act as server
+			if(master) {
+				ServerSocket server = new ServerSocket(SERVER_PORT);
+				server.setSoTimeout(15000);
+				socket = server.accept();
+				server.close();
+			}
+			// Act as client
+			else {
+				socket = new Socket(opponentIp, SERVER_PORT);
+			}
+			return true;
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -82,6 +107,10 @@ public class MatchRequest {
 
 	public void setMaster(boolean master) {
 		this.master = master;
+	}
+
+	public Socket getSocket() {
+		return socket;
 	}
 
 }

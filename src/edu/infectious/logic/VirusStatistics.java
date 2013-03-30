@@ -14,6 +14,9 @@ public abstract class VirusStatistics {
 	private static double notoriety = 0.0;
 	private static double deadliness = 0.0;
 	private static double infectiousness = 0.0;
+	private static double notorietyDelta = 0.0;
+	private static double deadlinessDelta = 0.0;
+	private static double infectiousnessDelta = 0.0;
 	private static boolean waterTransmission = false;
 	private static boolean airTransmission = false;
 	private static boolean plagueTransmission = false;
@@ -33,6 +36,9 @@ public abstract class VirusStatistics {
 		notoriety = 0.0;
 		deadliness = 0.0;
 		infectiousness = 0.0;
+		notorietyDelta = 0.0;
+		deadlinessDelta = 0.0;
+		infectiousnessDelta = 0.0;
 		waterTransmission = false;
 		airTransmission = false;
 		plagueTransmission = false;
@@ -72,15 +78,15 @@ public abstract class VirusStatistics {
 	}
 	
 	public static void applyDeadlinessVariation(double variation) {
-		deadliness += variation;
+		deadlinessDelta += variation;
 	}
 	
 	public static void applyInfectiousnessVariation(double variation) {
-		infectiousness += variation;
+		infectiousnessDelta += variation;
 	}
 	
 	public static void applyNotorietyVariation(double variation) {
-		notoriety += variation;
+		notorietyDelta += variation;
 	}
 	
 	public static void normalizeValues() {
@@ -145,6 +151,14 @@ public abstract class VirusStatistics {
 		return humidityBonus.get(humidity);
 	}
 	
+	public static int setTemperatureLevel(CountryClimateTemperature temperature, int level) {
+		return temperatureBonus.put(temperature, level);
+	}
+	
+	public static int setHumidityLevel(CountryClimateHumidity humidity, int level) {
+		return humidityBonus.put(humidity, level);
+	}
+	
 	public static void incrementTemperatureBonus(CountryClimateTemperature temperature) {
 		temperatureBonus.put(temperature, Math.min(temperatureBonus.get(temperature) + 1, MAX_CLIMATE_LEVEL));
 	}
@@ -199,6 +213,30 @@ public abstract class VirusStatistics {
 
 	public static void setLevel4Cost(int level4Cost) {
 		VirusStatistics.level4Cost = level4Cost;
+	}
+
+	public static double getNotorietyDelta() {
+		return notorietyDelta;
+	}
+
+	public static void setNotorietyDelta(double notorietyDelta) {
+		VirusStatistics.notorietyDelta = notorietyDelta;
+	}
+
+	public static double getDeadlinessDelta() {
+		return deadlinessDelta;
+	}
+
+	public static void setDeadlinessDelta(double deadlinessDelta) {
+		VirusStatistics.deadlinessDelta = deadlinessDelta;
+	}
+
+	public static double getInfectiousnessDelta() {
+		return infectiousnessDelta;
+	}
+
+	public static void setInfectiousnessDelta(double infectiousnessDelta) {
+		VirusStatistics.infectiousnessDelta = infectiousnessDelta;
 	}
 
 }

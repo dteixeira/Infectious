@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.script.ScriptEngine;
@@ -12,8 +13,9 @@ import javax.script.ScriptException;
 import edu.infectious.gui.utilities.Hexagon;
 import edu.infectious.gui.windows.MapPanel;
 
-public class Country {
-	
+public class Country implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private static final String COUNTRY_PATH = "script/country/rb/";
 	private static final String COUNTRY_UTILS_PATH = "script/country/utils.rb";
 	private static ArrayList<Country> countryList = new ArrayList<Country>();
@@ -47,6 +49,7 @@ public class Country {
 		temperature = CountryClimateTemperature.TEMPERATE;
 		type = CountryType.INDUSTRIAL;
 		alivePeople = 0;
+		totalPeople = 0;
 		infectedPeople = 0;
 		healtyPeople = 0;
 		deadPeople = 0;
@@ -58,6 +61,31 @@ public class Country {
 		closedBorders = false;
 		closedHospitals = false;
 		thresholds = new CountryThreshold(0, 0);
+	}
+	
+	private void resetCountry() {
+		state = CountryState.OK;
+		alivePeople = totalPeople;
+		infectedPeople = 0;
+		healtyPeople = totalPeople;
+		deadPeople = 0;
+		closedPorts = false;
+		closedAirports = false;
+		closedBorders = false;
+		closedHospitals = false;
+	}
+	
+	public static void resetCountries() {
+		for(Country c : countryList) {
+			c.resetCountry();
+		}
+	}
+	
+	public static void randomizeCaseZero() {
+		Country zero = countryList.get((int)(Math.random() * (countryList.size() - 1)));
+		zero.setInfectedPeople(1);
+		zero.setHealtyPeople(zero.getHealtyPeople() - 1);
+		zero.setState(CountryState.INFECTED);
 	}
 	
 	public static void initCountry() {

@@ -1,11 +1,13 @@
 package edu.infectious.gui.utilities;
 
 import java.awt.Polygon;
+import java.io.Serializable;
 
 import edu.infectious.script.country.Country;
 
-public class Hexagon {
+public class Hexagon implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private Polygon hexagon = null;
 	private int x = 0;
 	private int y = 0;

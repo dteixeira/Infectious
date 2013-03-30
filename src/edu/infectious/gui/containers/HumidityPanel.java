@@ -16,6 +16,7 @@ import edu.infectious.gui.utilities.SoundManager;
 import edu.infectious.logic.Game;
 import edu.infectious.logic.VirusStatistics;
 import edu.infectious.script.country.CountryClimateHumidity;
+import edu.infectious.script.trait.TraitType;
 
 public class HumidityPanel extends JPanel {
 
@@ -62,6 +63,9 @@ public class HumidityPanel extends JPanel {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
+				// Return unless virus player
+				if(Game.getPlayer().getPlayerType() == TraitType.CURE)
+					return;
 				resetButtonColor();
 				boolean hovered = false;
 				Point p = e.getPoint();
@@ -114,6 +118,9 @@ public class HumidityPanel extends JPanel {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// Return unless virus player
+				if(Game.getPlayer().getPlayerType() == TraitType.CURE)
+					return;
 				Point p = e.getPoint();
 				if(aridButton.isHit(p)) {
 					handleArid();

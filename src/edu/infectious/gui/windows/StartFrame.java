@@ -17,6 +17,7 @@ import edu.infectious.gui.listeners.StartFrameListener;
 import edu.infectious.gui.utilities.Button;
 import edu.infectious.gui.utilities.SoundEffect;
 import edu.infectious.gui.utilities.SoundManager;
+import edu.infectious.logic.Game;
 
 public class StartFrame extends JFrame {
 
@@ -130,7 +131,7 @@ public class StartFrame extends JFrame {
 	}
 	
 	private void handleStart() {
-		// TODO
+		Game.searchForOpponent();
 	}
 
 	private void setupFrame() {

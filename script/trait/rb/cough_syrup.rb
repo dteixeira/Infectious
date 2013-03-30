@@ -6,13 +6,11 @@ class Cough < TraitKlass
     super
     
     # Define all need values
-    name                     "Cough"
-    description              "A cough will increase virus transmission among infected people," <<
-                             " and also introduce a risk of respiratory passage damage. It's a" <<
-                             " fairly noticeable symptom."
+    name                     "Cough Syrup"
+    description              "Really? You don't know what this is?"
     activationCost           5
     deactivationCost         2
-    type                     :virus
+    type                     :cure
   end
 
   # Defines what to do when this trait's effect

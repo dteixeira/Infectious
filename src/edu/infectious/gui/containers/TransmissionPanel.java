@@ -16,6 +16,7 @@ import edu.infectious.gui.utilities.SoundEffect;
 import edu.infectious.gui.utilities.SoundManager;
 import edu.infectious.logic.Game;
 import edu.infectious.logic.VirusStatistics;
+import edu.infectious.script.trait.TraitType;
 
 public class TransmissionPanel extends JPanel {
 
@@ -67,6 +68,9 @@ public class TransmissionPanel extends JPanel {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
+				// Return unless virus player
+				if(Game.getPlayer().getPlayerType() == TraitType.CURE)
+					return;
 				resetButtonColor();
 				boolean hovered = false;
 				Point p = e.getPoint();
@@ -124,6 +128,9 @@ public class TransmissionPanel extends JPanel {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// Return unless virus player
+				if(Game.getPlayer().getPlayerType() == TraitType.CURE)
+					return;
 				Point p = e.getPoint();
 				if(airButton.isHit(p)) {
 					handleAir();

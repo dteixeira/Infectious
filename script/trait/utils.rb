@@ -28,7 +28,7 @@ class TraitKlass < Trait
   end
   
   def type val
-    self.type = CModule::PlayerType.valueOf(val.to_s.upcase)
+    self.type = CModule::TraitType.valueOf(val.to_s.upcase)
   end
     
   def add
