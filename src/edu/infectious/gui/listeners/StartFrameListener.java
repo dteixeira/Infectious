@@ -8,9 +8,23 @@ import edu.infectious.gui.windows.StartFrame;
 
 public class StartFrameListener implements MouseListener, MouseMotionListener {
 
+	/*
+	 * Instance methods
+	 */
 	@Override
-	public void mouseDragged(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
+		StartFrame frame = (StartFrame) e.getComponent();
+		frame.handleClick(e);
 	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -19,25 +33,9 @@ public class StartFrameListener implements MouseListener, MouseMotionListener {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		StartFrame frame = (StartFrame) e.getComponent();
-		frame.handleClick(e);
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
+	public void mouseReleased(MouseEvent e) {}
 
 }

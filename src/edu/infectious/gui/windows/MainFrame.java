@@ -5,13 +5,26 @@ import javax.swing.WindowConstants;
 
 public class MainFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
+	/*
+	 * Constants
+	 */
+	private static final long	serialVersionUID	= 1L;
 
+	/*
+	 * Constructor
+	 */
 	public MainFrame() {
 		super();
 		setupFrame();
 		setupMapPanel();
 		setupCountry();
+	}
+
+	/*
+	 * Instance methods
+	 */
+	private void setupCountry() {
+		MapPanel.getInstance().refreshTurn();
 	}
 
 	private void setupFrame() {
@@ -22,10 +35,6 @@ public class MainFrame extends JFrame {
 
 	private void setupMapPanel() {
 		getContentPane().add(MapPanel.getInstance());
-	}
-	
-	private void setupCountry() {
-		MapPanel.getInstance().refreshTurn();
 	}
 
 }

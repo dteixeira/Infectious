@@ -4,26 +4,28 @@ import java.awt.Polygon;
 
 public class HexagonFactory {
 
-	private double radius = 0;
-	private double width = 0;
-	private double height = 0;
-	private double side = 0;
+	/*
+	 * Instance fields
+	 */
+	private double	height	= 0;
+	private double	radius	= 0;
+	private double	side	= 0;
+	private double	width	= 0;
+
+	/*
+	 * Constructor
+	 */
+	public HexagonFactory(double radius) {
+		setupHexagonFactory(radius);
+	}
 
 	public HexagonFactory(int radius) {
 		setupHexagonFactory((double) radius);
 	}
 
-	public HexagonFactory(double radius) {
-		setupHexagonFactory(radius);
-	}
-
-	private void setupHexagonFactory(double r) {
-		radius = r;
-		width = radius * 2.0;
-		height = radius * Math.sqrt(3.0);
-		side = radius * 3 / 2.0;
-	}
-
+	/*
+	 * Instance methods
+	 */
 	public Hexagon buildHexagon(int x, int y) {
 		Hexagon hex = new Hexagon(x, y);
 		Polygon p = new Polygon();
@@ -41,6 +43,13 @@ public class HexagonFactory {
 
 	public double getSide() {
 		return side;
+	}
+
+	private void setupHexagonFactory(double r) {
+		radius = r;
+		width = radius * 2.0;
+		height = radius * Math.sqrt(3.0);
+		side = radius * 3 / 2.0;
 	}
 
 }

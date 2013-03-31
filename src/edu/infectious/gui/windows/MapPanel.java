@@ -19,8 +19,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
 import edu.infectious.gui.listeners.MapManipulationListener;
 import edu.infectious.gui.utilities.Button;
 import edu.infectious.gui.utilities.Hexagon;
@@ -32,51 +34,67 @@ import edu.infectious.script.country.CountryState;
 
 public class MapPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-	private static final int HORIZONTAL_CELLS = 150;
-	private static final Color GRID_COLOR = new Color(.8f, .8f, .8f, .1f);
-	private static final Color POINTER_LINE_COLOR = new Color(0f, .5f, 1f, 1f);
-	private static final Color POINTER_FILL_COLOR = new Color(0f, .5f, 1f, .5f);
-	private static final Color OK_COLOR = new Color(0f, 0.459f, 0.063f, .3f);
-	private static final Color INFECTED_COLOR = new Color(0.831f, 0.804f, 0f, .3f);
-	private static final Color DEAD_COLOR = new Color(0.659f, 0.122f, 0f, .3f);
-	private static final Color LOWER_BAR_COLOR = new Color(0.123f, 0.123f, 0.123f, 0.85f);
-	private static final Color BUTTON_COLOR = new Color(0.149f, 0.451f, 0.925f);
-	private static final Color BUTTON_LINE_COLOR = Color.WHITE;
-	private static final Color BUTTON_HOVER_COLOR = new Color(0.349f, 0.573f, 0.925f);
-	private static final Color STAT_BAR_COLOR = new Color(0.149f, 0.451f, 0.925f, .5f);
-	private static final int GRID_STROKE_WIDTH = 5;
-	private static final int POINTER_STROKE_WIDTH = 3;
-	private static final String MAP_FILENAME = "images/world2.jpg";
-	private static MapPanel instance = null;
+	/*
+	 * Constants
+	 */
+	private static final Color	BUTTON_COLOR				= new Color(0.149f, 0.451f, 0.925f);
+	private static final Color	BUTTON_HOVER_COLOR			= new Color(0.349f, 0.573f, 0.925f);
+	private static final Color	BUTTON_LINE_COLOR			= Color.WHITE;
+	private static final Color	DEAD_COLOR					= new Color(0.659f, 0.122f, 0f, .3f);
+	private static final Color	GRID_COLOR					= new Color(.8f, .8f, .8f, .1f);
+	private static final int	GRID_STROKE_WIDTH			= 5;
+	private static final int	HORIZONTAL_CELLS			= 150;
+	private static final Color	INFECTED_COLOR				= new Color(0.831f, 0.804f, 0f, .3f);
+	private static final Color	LOWER_BAR_COLOR				= new Color(0.123f, 0.123f, 0.123f, 0.85f);
+	private static final String	MAP_FILENAME				= "images/world2.jpg";
+	private static final Color	OK_COLOR					= new Color(0f, 0.459f, 0.063f, .3f);
+	private static final Color	POINTER_FILL_COLOR			= new Color(0f, .5f, 1f, .5f);
+	private static final Color	POINTER_LINE_COLOR			= new Color(0f, .5f, 1f, 1f);
+	private static final int	POINTER_STROKE_WIDTH		= 3;
+	private static final long	serialVersionUID			= 1L;
+	private static final Color	STAT_BAR_COLOR				= new Color(0.149f, 0.451f, 0.925f, .5f);
 
-	private HexagonFactory hexagonFactory = null;
-	private ArrayList<Hexagon> gridMap = null;
-	private BufferedImage background = null;
-	private BufferedImage turnBackground = null;
-	private Button menuButton = null;
-	private Button pointsCounter = null;
-	private Dimension screenSize = null;
-	private Point underMousePoint = new Point(0, 0);
-	private Hexagon pointer = null;
-	private AffineTransform transform = null;
-	private boolean zoomed = false;
-	private int scrollX = 0;
-	private int scrollY = 0;
-	private double widthFactor = 0.0;
-	private double heightFactor = 0.0;
-	private double screenRatioCorrectionFactor = 0.0;
-	private Polygon lowerBar = null;
-	private boolean hoverBar = false;
-	private boolean hoverMenuButton = false;
-	private Cursor cursor = null;
+	/*
+	 * Class fields
+	 */
+	private static MapPanel		instance					= null;
 
+	/*
+	 * Instance fields
+	 */
+	private BufferedImage		background					= null;
+	private Cursor				cursor						= null;
+	private ArrayList<Hexagon>	gridMap						= null;
+	private double				heightFactor				= 0.0;
+	private HexagonFactory		hexagonFactory				= null;
+	private boolean				hoverBar					= false;
+	private boolean				hoverMenuButton				= false;
+	private Polygon				lowerBar					= null;
+	private Button				menuButton					= null;
+	private Hexagon				pointer						= null;
+	private Button				pointsCounter				= null;
+	private double				screenRatioCorrectionFactor	= 0.0;
+	private Dimension			screenSize					= null;
+	private int					scrollX						= 0;
+	private int					scrollY						= 0;
+	private AffineTransform		transform					= null;
+	private BufferedImage		turnBackground				= null;
+	private Point				underMousePoint				= new Point(0, 0);
+	private double				widthFactor					= 0.0;
+	private boolean				zoomed						= false;
+
+	/*
+	 * Class methods
+	 */
 	public static MapPanel getInstance() {
 		if (instance == null)
 			instance = new MapPanel(true);
 		return instance;
 	}
 
+	/*
+	 * Constructor
+	 */
 	private MapPanel(boolean db) {
 		super(db);
 		setupCursor();
@@ -85,29 +103,201 @@ public class MapPanel extends JPanel {
 		setupListeners();
 		setupLowerBar();
 	}
-	
-	private void setupCursor() {
-		cursor = getToolkit().createCustomCursor(
-				new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB),
-				new Point(0, 0), "null");
-		setCursor(cursor);
+
+	/*
+	 * Instance methods
+	 */
+	public void createTurnBackground() {
+		if (turnBackground == null)
+			turnBackground = new BufferedImage(background.getWidth(), background.getHeight(),
+					background.getType());
+		Graphics2D g = turnBackground.createGraphics();
+		g.drawImage(background, 0, 0, null);
+		g.setStroke(new BasicStroke(POINTER_STROKE_WIDTH));
+		g.scale(1.0, screenRatioCorrectionFactor);
+		for (Country c : Country.getCountryList()) {
+			for (Hexagon hex : c.getCells()) {
+				setStateColor(g, c.getState());
+				g.fillPolygon(hex.getHexagon());
+			}
+		}
 	}
 
-	private void setupLowerBar() {
-		// Bar
-		lowerBar = new Polygon();
-		lowerBar.addPoint(0, screenSize.height - 40);
-		lowerBar.addPoint(screenSize.width, screenSize.height - 40);
-		lowerBar.addPoint(screenSize.width, screenSize.height);
-		lowerBar.addPoint(0, screenSize.height);
+	public Dimension getBackgroundDimensions() {
+		return new Dimension(background.getWidth(), background.getHeight());
+	}
 
-		// Menu button
-		menuButton = new Button(screenSize.width - 110, screenSize.height - 35,
-				100, 30, 2, "Menu", BUTTON_COLOR, BUTTON_LINE_COLOR);
+	public Cursor getCursor() {
+		return cursor;
+	}
 
-		// Points counter
-		pointsCounter = new Button(10, screenSize.height - 35, 100, 30, 2, "0",
-				new Color(0f, 0f, 0f, 0f), Color.WHITE);
+	public ArrayList<Hexagon> getGridMap() {
+		return gridMap;
+	}
+
+	public double getHeightFactor() {
+		return heightFactor;
+	}
+
+	public Polygon getLowerBar() {
+		return lowerBar;
+	}
+
+	public Button getMenuButton() {
+		return menuButton;
+	}
+
+	public Hexagon getPointer() {
+		return pointer;
+	}
+
+	public double getScreenRatioCorrectionFactor() {
+		return screenRatioCorrectionFactor;
+	}
+
+	public Dimension getScreenSize() {
+		return screenSize;
+	}
+
+	public int getScrollX() {
+		return scrollX;
+	}
+
+	public int getScrollY() {
+		return scrollY;
+	}
+
+	public AffineTransform getTransform() {
+		return transform;
+	}
+
+	public Point getUnderMousePoint() {
+		return underMousePoint;
+	}
+
+	public double getWidthFactor() {
+		return widthFactor;
+	}
+
+	public boolean isHoverBar() {
+		return hoverBar;
+	}
+
+	public boolean isHoverMenuButton() {
+		return hoverMenuButton;
+	}
+
+	public boolean isZoomed() {
+		return zoomed;
+	}
+
+	public void refreshTurn() {
+		createTurnBackground();
+		repaint();
+	}
+
+	public void setGridMap(ArrayList<Hexagon> gridMap) {
+		this.gridMap = gridMap;
+	}
+
+	public void setHoverBar(boolean hoverBar) {
+		this.hoverBar = hoverBar;
+	}
+
+	public void setHoverMenuButton(boolean hoverMenuButton) {
+		this.hoverMenuButton = hoverMenuButton;
+	}
+
+	public void setPointer(Hexagon pointer) {
+		this.pointer = pointer;
+	}
+
+	public void setScreenRatioCorrectionFactor(double screenRatioCorrectionFactor) {
+		this.screenRatioCorrectionFactor = screenRatioCorrectionFactor;
+	}
+
+	public void setScreenSize(Dimension screenSize) {
+		this.screenSize = screenSize;
+	}
+
+	public void setScrollX(int scrollX) {
+		this.scrollX = scrollX;
+	}
+
+	public void setScrollY(int scrollY) {
+		this.scrollY = scrollY;
+	}
+
+	public void setTransform(AffineTransform transform) {
+		this.transform = transform;
+	}
+
+	public void setUnderMousePoint(Point underMousePoint) {
+		this.underMousePoint = underMousePoint;
+	}
+
+	public void setZoomed(boolean zoomed) {
+		this.zoomed = zoomed;
+	}
+
+	private void drawStatBars(Graphics2D g2d) {
+		int totalWidth = (int) ((screenSize.width - menuButton.getWidth()
+				- pointsCounter.getWidth() - 60) / 3.0);
+		int leftSpace = 10 + pointsCounter.getWidth();
+		g2d.setStroke(new BasicStroke(2));
+		g2d.setColor(Color.WHITE);
+
+		// Infectiousness bar
+		g2d.setColor(STAT_BAR_COLOR);
+		g2d.fillRect(leftSpace + 10, screenSize.height - 35,
+				(int) (totalWidth * VirusStatistics.getInfectiousness()), 30);
+		g2d.setColor(Color.WHITE);
+		g2d.drawRect(leftSpace + 10, screenSize.height - 35, totalWidth, 30);
+		drawStatText(g2d, "Infectiousness", leftSpace + 10, screenSize.height - 35, totalWidth, 30);
+
+		// Notoriety bar
+		g2d.setColor(STAT_BAR_COLOR);
+		g2d.fillRect(leftSpace + 20 + totalWidth, screenSize.height - 35,
+				(int) (totalWidth * VirusStatistics.getNotoriety()), 30);
+		g2d.setColor(Color.WHITE);
+		g2d.drawRect(leftSpace + 20 + totalWidth, screenSize.height - 35, totalWidth, 30);
+		drawStatText(g2d, "Notoriety", leftSpace + 20 + totalWidth, screenSize.height - 35,
+				totalWidth, 30);
+
+		// Deadliness bar
+		g2d.setColor(STAT_BAR_COLOR);
+		g2d.fillRect(leftSpace + 30 + totalWidth * 2, screenSize.height - 35,
+				(int) (totalWidth * VirusStatistics.getDeadliness()), 30);
+		g2d.setColor(Color.WHITE);
+		g2d.drawRect(leftSpace + 30 + totalWidth * 2, screenSize.height - 35, totalWidth, 30);
+		drawStatText(g2d, "Deadliness", leftSpace + 30 + totalWidth * 2, screenSize.height - 35,
+				totalWidth, 30);
+	}
+
+	private void drawStatText(Graphics2D g2d, String text, int x, int y, int width, int height) {
+		Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
+		int textX = (int) (width / 2.0) + x - (int) (bounds.getWidth() / 2.0);
+		int textY = (int) (height / 2.0) + y - (int) (bounds.getHeight() / 2.0)
+				+ g2d.getFontMetrics().getAscent();
+		g2d.setColor(new Color(.8f, .8f, .8f));
+		g2d.setFont(new Font("Sans-serif", Font.PLAIN, 18));
+		g2d.drawString(text, textX, textY);
+	}
+
+	private void setStateColor(Graphics2D g, CountryState state) {
+		switch (state) {
+		case OK:
+			g.setColor(OK_COLOR);
+			break;
+		case INFECTED:
+			g.setColor(INFECTED_COLOR);
+			break;
+		case DEAD:
+			g.setColor(DEAD_COLOR);
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void setupBackground() {
@@ -116,15 +306,13 @@ public class MapPanel extends JPanel {
 			screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 
 			// Adjust background image ratio
-			double adjustedHeight = toResize.getWidth()
-					* screenSize.getHeight() / screenSize.getWidth();
-			GraphicsEnvironment env = GraphicsEnvironment
-					.getLocalGraphicsEnvironment();
+			double adjustedHeight = toResize.getWidth() * screenSize.getHeight()
+					/ screenSize.getWidth();
+			GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			GraphicsDevice device = env.getDefaultScreenDevice();
 			GraphicsConfiguration config = device.getDefaultConfiguration();
-			background = config.createCompatibleImage(
-					(int) toResize.getWidth(), (int) adjustedHeight,
-					Transparency.TRANSLUCENT);
+			background = config.createCompatibleImage((int) toResize.getWidth(),
+					(int) adjustedHeight, Transparency.TRANSLUCENT);
 			Graphics2D g2d = background.createGraphics();
 			screenRatioCorrectionFactor = adjustedHeight / toResize.getHeight();
 			g2d.scale(1.0, screenRatioCorrectionFactor);
@@ -135,8 +323,7 @@ public class MapPanel extends JPanel {
 			g2d.dispose();
 
 			// Build hexagonGrid
-			setupHexagonGrid(toResize.getWidth(), toResize.getHeight(),
-					adjustedHeight);
+			setupHexagonGrid(toResize.getWidth(), toResize.getHeight(), adjustedHeight);
 
 			// Setup turn background
 			createTurnBackground();
@@ -146,11 +333,16 @@ public class MapPanel extends JPanel {
 		}
 	}
 
+	private void setupCursor() {
+		cursor = getToolkit().createCustomCursor(
+				new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null");
+		setCursor(cursor);
+	}
+
 	private void setupHexagonGrid(int width, int height, double adjustedHeight) {
 		hexagonFactory = new HexagonFactory((width / (double) HORIZONTAL_CELLS));
 		gridMap = new ArrayList<Hexagon>();
-		BufferedImage toResize = new BufferedImage(width, height,
-				BufferedImage.TYPE_INT_ARGB);
+		BufferedImage toResize = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = toResize.createGraphics();
 		g2d.setBackground(new Color(1f, 1f, 1f, 0f));
 		g2d.clearRect(0, 0, toResize.getWidth(), toResize.getHeight());
@@ -173,17 +365,34 @@ public class MapPanel extends JPanel {
 		g2d.dispose();
 	}
 
-	private void setupTransform() {
-		transform = new AffineTransform();
-		transform.scale(background.getWidth() / screenSize.getWidth(),
-				background.getHeight() / screenSize.getHeight());
-	}
-
 	private void setupListeners() {
 		MapManipulationListener mouse = new MapManipulationListener();
 		addMouseListener(mouse);
 		addMouseMotionListener(mouse);
 		addMouseWheelListener(mouse);
+	}
+
+	private void setupLowerBar() {
+		// Bar
+		lowerBar = new Polygon();
+		lowerBar.addPoint(0, screenSize.height - 40);
+		lowerBar.addPoint(screenSize.width, screenSize.height - 40);
+		lowerBar.addPoint(screenSize.width, screenSize.height);
+		lowerBar.addPoint(0, screenSize.height);
+
+		// Menu button
+		menuButton = new Button(screenSize.width - 110, screenSize.height - 35, 100, 30, 2, "Menu",
+				BUTTON_COLOR, BUTTON_LINE_COLOR);
+
+		// Points counter
+		pointsCounter = new Button(10, screenSize.height - 35, 100, 30, 2, "0", new Color(0f, 0f,
+				0f, 0f), Color.WHITE);
+	}
+
+	private void setupTransform() {
+		transform = new AffineTransform();
+		transform.scale(background.getWidth() / screenSize.getWidth(), background.getHeight()
+				/ screenSize.getHeight());
 	}
 
 	@Override
@@ -235,7 +444,7 @@ public class MapPanel extends JPanel {
 		}
 
 		// Draw mouse pointer
-		if(!hoverBar) {
+		if (!hoverBar) {
 			g2d.setColor(POINTER_FILL_COLOR);
 			g2d.fillPolygon(hex.getHexagon());
 			g2d.setStroke(new BasicStroke(POINTER_STROKE_WIDTH));
@@ -252,7 +461,7 @@ public class MapPanel extends JPanel {
 		g2d.fillPolygon(lowerBar);
 
 		// Draw menu button
-		if(hoverMenuButton)
+		if (hoverMenuButton)
 			menuButton.setFillColor(BUTTON_HOVER_COLOR);
 		else
 			menuButton.setFillColor(BUTTON_COLOR);
@@ -268,194 +477,6 @@ public class MapPanel extends JPanel {
 
 		// Dispose of graphics context
 		g2d.dispose();
-	}
-
-	private void drawStatBars(Graphics2D g2d) {
-		int totalWidth = (int) ((screenSize.width - menuButton.getWidth()
-				- pointsCounter.getWidth() - 60) / 3.0);
-		int leftSpace = 10 + pointsCounter.getWidth();
-		g2d.setStroke(new BasicStroke(2));
-		g2d.setColor(Color.WHITE);
-		
-		// Infectiousness bar
-		g2d.setColor(STAT_BAR_COLOR);
-		g2d.fillRect(leftSpace + 10, screenSize.height - 35, (int) (totalWidth * VirusStatistics.getInfectiousness()), 30);
-		g2d.setColor(Color.WHITE);
-		g2d.drawRect(leftSpace + 10, screenSize.height - 35, totalWidth, 30);
-		drawStatText(g2d, "Infectiousness", leftSpace + 10, screenSize.height - 35, totalWidth, 30);
-		
-		// Notoriety bar
-		g2d.setColor(STAT_BAR_COLOR);
-		g2d.fillRect(leftSpace + 20 + totalWidth, screenSize.height - 35, (int) (totalWidth * VirusStatistics.getNotoriety()), 30);
-		g2d.setColor(Color.WHITE);
-		g2d.drawRect(leftSpace + 20 + totalWidth, screenSize.height - 35, totalWidth, 30);
-		drawStatText(g2d, "Notoriety", leftSpace + 20 + totalWidth, screenSize.height - 35, totalWidth, 30);
-		
-		// Deadliness bar
-		g2d.setColor(STAT_BAR_COLOR);
-		g2d.fillRect(leftSpace + 30 + totalWidth * 2, screenSize.height - 35, (int) (totalWidth * VirusStatistics.getDeadliness()), 30);
-		g2d.setColor(Color.WHITE);
-		g2d.drawRect(leftSpace + 30 + totalWidth * 2, screenSize.height - 35, totalWidth, 30);
-		drawStatText(g2d, "Deadliness", leftSpace + 30 + totalWidth * 2, screenSize.height - 35, totalWidth, 30);
-	}
-	
-	private void drawStatText(Graphics2D g2d, String text, int x, int y, int width, int height) {
-		Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(text, g2d);
-		int textX = (int)(width / 2.0) + x - (int)(bounds.getWidth() / 2.0);
-		int textY = (int)(height / 2.0) + y - (int)(bounds.getHeight() / 2.0) + g2d.getFontMetrics().getAscent();
-		g2d.setColor(new Color(.8f, .8f, .8f));
-		g2d.setFont(new Font("Sans-serif", Font.PLAIN, 18));
-		g2d.drawString(text, textX, textY);
-	}
-
-	public void createTurnBackground() {
-		if (turnBackground == null)
-			turnBackground = new BufferedImage(background.getWidth(),
-					background.getHeight(), background.getType());
-		Graphics2D g = turnBackground.createGraphics();
-		g.drawImage(background, 0, 0, null);
-		g.setStroke(new BasicStroke(POINTER_STROKE_WIDTH));
-		g.scale(1.0, screenRatioCorrectionFactor);
-		for (Country c : Country.getCountryList()) {
-			for (Hexagon hex : c.getCells()) {
-				setStateColor(g, c.getState());
-				g.fillPolygon(hex.getHexagon());
-			}
-		}
-	}
-
-	private void setStateColor(Graphics2D g, CountryState state) {
-		switch (state) {
-		case OK:
-			g.setColor(OK_COLOR);
-			break;
-		case INFECTED:
-			g.setColor(INFECTED_COLOR);
-			break;
-		case DEAD:
-			g.setColor(DEAD_COLOR);
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void refreshTurn() {
-		createTurnBackground();
-		repaint();
-	}
-
-	public boolean isZoomed() {
-		return zoomed;
-	}
-
-	public void setZoomed(boolean zoomed) {
-		this.zoomed = zoomed;
-	}
-
-	public int getScrollX() {
-		return scrollX;
-	}
-
-	public void setScrollX(int scrollX) {
-		this.scrollX = scrollX;
-	}
-
-	public int getScrollY() {
-		return scrollY;
-	}
-
-	public void setScrollY(int scrollY) {
-		this.scrollY = scrollY;
-	}
-
-	public Point getUnderMousePoint() {
-		return underMousePoint;
-	}
-
-	public void setUnderMousePoint(Point underMousePoint) {
-		this.underMousePoint = underMousePoint;
-	}
-
-	public AffineTransform getTransform() {
-		return transform;
-	}
-
-	public void setTransform(AffineTransform transform) {
-		this.transform = transform;
-	}
-
-	public Dimension getScreenSize() {
-		return screenSize;
-	}
-
-	public void setScreenSize(Dimension screenSize) {
-		this.screenSize = screenSize;
-	}
-
-	public Dimension getBackgroundDimensions() {
-		return new Dimension(background.getWidth(), background.getHeight());
-	}
-
-	public Hexagon getPointer() {
-		return pointer;
-	}
-
-	public void setPointer(Hexagon pointer) {
-		this.pointer = pointer;
-	}
-
-	public ArrayList<Hexagon> getGridMap() {
-		return gridMap;
-	}
-
-	public void setGridMap(ArrayList<Hexagon> gridMap) {
-		this.gridMap = gridMap;
-	}
-
-	public double getScreenRatioCorrectionFactor() {
-		return screenRatioCorrectionFactor;
-	}
-
-	public void setScreenRatioCorrectionFactor(
-			double screenRatioCorrectionFactor) {
-		this.screenRatioCorrectionFactor = screenRatioCorrectionFactor;
-	}
-
-	public boolean isHoverBar() {
-		return hoverBar;
-	}
-
-	public void setHoverBar(boolean hoverBar) {
-		this.hoverBar = hoverBar;
-	}
-
-	public boolean isHoverMenuButton() {
-		return hoverMenuButton;
-	}
-
-	public void setHoverMenuButton(boolean hoverMenuButton) {
-		this.hoverMenuButton = hoverMenuButton;
-	}
-
-	public Button getMenuButton() {
-		return menuButton;
-	}
-
-	public Polygon getLowerBar() {
-		return lowerBar;
-	}
-
-	public Cursor getCursor() {
-		return cursor;
-	}
-
-	public double getWidthFactor() {
-		return widthFactor;
-	}
-
-	public double getHeightFactor() {
-		return heightFactor;
 	}
 
 }

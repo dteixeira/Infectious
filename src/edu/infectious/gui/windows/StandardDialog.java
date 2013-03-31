@@ -10,6 +10,7 @@ import java.awt.Polygon;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
@@ -18,60 +19,32 @@ import edu.infectious.gui.utilities.HexagonFactory;
 
 public abstract class StandardDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private static BufferedImage standardBackground;
-	private static Color standardBackgroundColor;
-	private static Dimension standardDimensions;
+	/*
+	 * Constants
+	 */
+	private static final long		serialVersionUID	= 1L;
 
-	protected BufferedImage background;
-	protected ArrayList<Button> buttons;
-	protected Dimension dimensions;
-	protected Color backgroundColor;
-	protected JPanel panel;
+	/*
+	 * Class fields
+	 */
+	private static BufferedImage	standardBackground;
+	private static Color			standardBackgroundColor;
+	private static Dimension		standardDimensions;
 	
-	protected StandardDialog(Dimension dimension, Color color) {
-		// Standard setup for dialogs
-		backgroundColor = color;
-		dimensions = dimension;
-		setPreferredSize(dimensions);
-		setSize(dimensions);
-		setResizable(false);
-		setUndecorated(true);
-		setModal(true);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation(new Point(
-				(int) ((screen.width - dimensions.width) / 2.0),
-				(int) ((screen.height - dimensions.height) / 2.0)));
-		
-		// Initialise buttons list
-		buttons = new ArrayList<Button>();
-		setupBackground();
-	}
+	/*
+	 * Instance fields
+	 */
+	protected BufferedImage		background;
+	protected Color				backgroundColor;
+	protected ArrayList<Button>	buttons;
+	protected Dimension			dimensions;
+	protected JPanel			panel;
 
-	protected StandardDialog() {
-		this(standardDimensions, standardBackgroundColor);
-	}
-	
-	protected StandardDialog(Dimension dimension) {
-		this(dimension, standardBackgroundColor);
-	}
-	
-	private void setupBackground() {
-		background = new BufferedImage(dimensions.width, dimensions.height, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = background.createGraphics();
-		g.setBackground(backgroundColor);
-		g.clearRect(0, 0, dimensions.width, dimensions.height);
-		Polygon p = new Polygon();
-		p.addPoint(5, 5);
-		p.addPoint(dimensions.width - 5, 5);
-		p.addPoint(dimensions.width - 5, dimensions.height - 5);
-		p.addPoint(5, dimensions.height - 5);
-		g.setStroke(new BasicStroke(3));
-		g.setColor(Color.WHITE);
-		g.drawPolygon(p);
-		g.drawImage(standardBackground, 0, 0, null);
-		g.dispose();
+	/*
+	 * Class instances
+	 */
+	public static void setupDialogs() {
+		setupDialogs(new Color(0.137f, 0.137f, 0.137f), new Dimension(800, 600));
 	}
 
 	public static void setupDialogs(Color color, Dimension dimension) {
@@ -79,15 +52,18 @@ public abstract class StandardDialog extends JDialog {
 		standardBackgroundColor = color;
 		setupStandardBackground();
 	}
-	
+
 	public static void setupDialogs(Dimension dimension) {
 		setupDialogs(new Color(0.137f, 0.137f, 0.137f), dimension);
 	}
-	
-	public static void setupDialogs() {
-		setupDialogs(new Color(0.137f, 0.137f, 0.137f), new Dimension(800, 600));
+
+	private static void drawHexagon(Graphics g, Color c, Polygon p) {
+		g.setColor(c);
+		g.fillPolygon(p);
+		g.setColor(Color.WHITE);
+		g.drawPolygon(p);
 	}
-	
+
 	private static void setupStandardBackground() {
 		standardBackground = new BufferedImage(300, 200, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = standardBackground.createGraphics();
@@ -109,12 +85,56 @@ public abstract class StandardDialog extends JDialog {
 		drawHexagon(g, c3, factory.buildHexagon(7, 2).getHexagon());
 		g.dispose();
 	}
-	
-	private static void drawHexagon(Graphics g, Color c, Polygon p) {
-		g.setColor(c);
-		g.fillPolygon(p);
+
+	/*
+	 * Constructor
+	 */
+	protected StandardDialog() {
+		this(standardDimensions, standardBackgroundColor);
+	}
+
+	protected StandardDialog(Dimension dimension) {
+		this(dimension, standardBackgroundColor);
+	}
+
+	protected StandardDialog(Dimension dimension, Color color) {
+		// Standard setup for dialogs
+		backgroundColor = color;
+		dimensions = dimension;
+		setPreferredSize(dimensions);
+		setSize(dimensions);
+		setResizable(false);
+		setUndecorated(true);
+		setModal(true);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(new Point((int) ((screen.width - dimensions.width) / 2.0),
+				(int) ((screen.height - dimensions.height) / 2.0)));
+
+		// Initialise buttons list
+		buttons = new ArrayList<Button>();
+		setupBackground();
+	}
+
+	/*
+	 * Instance methods
+	 */
+	private void setupBackground() {
+		background = new BufferedImage(dimensions.width, dimensions.height,
+				BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = background.createGraphics();
+		g.setBackground(backgroundColor);
+		g.clearRect(0, 0, dimensions.width, dimensions.height);
+		Polygon p = new Polygon();
+		p.addPoint(5, 5);
+		p.addPoint(dimensions.width - 5, 5);
+		p.addPoint(dimensions.width - 5, dimensions.height - 5);
+		p.addPoint(5, dimensions.height - 5);
+		g.setStroke(new BasicStroke(3));
 		g.setColor(Color.WHITE);
 		g.drawPolygon(p);
+		g.drawImage(standardBackground, 0, 0, null);
+		g.dispose();
 	}
 
 }

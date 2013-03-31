@@ -8,9 +8,23 @@ import edu.infectious.gui.windows.GameMenuDialog;
 
 public class GameMenuDialogListener implements MouseListener, MouseMotionListener {
 
+	/*
+	 * Instance methods
+	 */
 	@Override
-	public void mouseDragged(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
+		GameMenuDialog dialog = (GameMenuDialog) e.getComponent();
+		dialog.handleClick(e);
 	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -19,25 +33,9 @@ public class GameMenuDialogListener implements MouseListener, MouseMotionListene
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		GameMenuDialog dialog = (GameMenuDialog) e.getComponent();
-		dialog.handleClick(e);
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
+	public void mouseReleased(MouseEvent e) {}
 
 }

@@ -7,47 +7,60 @@ import edu.infectious.script.country.Country;
 
 public class Hexagon implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private Polygon hexagon = null;
-	private int x = 0;
-	private int y = 0;
-	private Country country = null;
+	/*
+	 * Constants
+	 */
+	private static final long	serialVersionUID	= 1L;
+	
+	/*
+	 * Instance fields
+	 */
+	private Country				country				= null;
+	private Polygon				hexagon				= null;
+	private int					x					= 0;
+	private int					y					= 0;
 
-	public Polygon getHexagon() {
-		return hexagon;
-	}
-
-	public void setHexagon(Polygon hexagon) {
-		this.hexagon = hexagon;
-	}
-
+	/*
+	 * Constructor
+	 */
 	public Hexagon(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	/*
+	 * Instance methods
+	 */
+	public Country getCountry() {
+		return country;
+	}
+
+	public Polygon getHexagon() {
+		return hexagon;
 	}
 
 	public int getX() {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
 	public int getY() {
 		return y;
 	}
 
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public Country getCountry() {
-		return country;
-	}
-
 	public void setCountry(Country country) {
 		this.country = country;
+	}
+
+	public void setHexagon(Polygon hexagon) {
+		this.hexagon = hexagon;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 
 }
