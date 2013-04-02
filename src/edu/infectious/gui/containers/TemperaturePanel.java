@@ -37,7 +37,6 @@ public class TemperaturePanel extends JPanel {
 	/*
 	 * Instance fields
 	 */
-	private Color				backgroundColor;
 	private boolean				buttonHover			= false;
 	private Button				coldButton;
 	private Button				hotButton;
@@ -46,9 +45,8 @@ public class TemperaturePanel extends JPanel {
 	/*
 	 * Constructor
 	 */
-	public TemperaturePanel(Color backgroundColor) {
+	public TemperaturePanel() {
 		super(true);
-		this.backgroundColor = backgroundColor;
 		setupPanel();
 		setupButtons();
 		setupListeners();
@@ -322,7 +320,7 @@ public class TemperaturePanel extends JPanel {
 	}
 
 	private void setupPanel() {
-		setBackground(backgroundColor);
+		setBackground(new Color(0f, 0f, 0f, 0f));
 	}
 
 }

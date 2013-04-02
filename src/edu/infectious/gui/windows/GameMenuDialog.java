@@ -164,7 +164,6 @@ public class GameMenuDialog extends StandardDialog {
 	}
 
 	private void setupDialog() {
-		setOpacity(0.9f);
 	}
 
 	private void setupListeners() {

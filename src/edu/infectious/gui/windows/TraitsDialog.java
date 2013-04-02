@@ -1,5 +1,6 @@
 package edu.infectious.gui.windows;
 
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
@@ -41,26 +42,25 @@ public class TraitsDialog extends StandardDialog {
 	 * Instance methods
 	 */
 	private void setupDialog() {
-		setOpacity(0.9f);
 	}
 
 	private void setupMainPanel() {
 		panel = new JPanel(null, true);
-		panel.setBackground(backgroundColor);
+		panel.setBackground(new Color(0f, 0f, 0f, 0f));
 		getContentPane().add(panel);
 	}
 
 	private void setupPanels() {
-		transmissionPanel = new TransmissionPanel(backgroundColor);
+		transmissionPanel = new TransmissionPanel();
 		transmissionPanel.setBounds(0, 0, 300, 240);
 		panel.add(transmissionPanel);
-		temperaturePanel = new TemperaturePanel(backgroundColor);
+		temperaturePanel = new TemperaturePanel();
 		temperaturePanel.setBounds(0, 240, 300, 180);
 		panel.add(temperaturePanel);
-		humidityPanel = new HumidityPanel(backgroundColor);
+		humidityPanel = new HumidityPanel();
 		humidityPanel.setBounds(0, 420, 300, 180);
 		panel.add(humidityPanel);
-		traitPanel = new TraitPanel(backgroundColor);
+		traitPanel = new TraitPanel();
 		traitPanel.setBounds(300, 0, 500, 600);
 		panel.add(traitPanel);
 	}

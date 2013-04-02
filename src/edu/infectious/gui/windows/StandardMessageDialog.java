@@ -46,7 +46,6 @@ public class StandardMessageDialog extends StandardDialog {
 	}
 
 	private void setupDialog() {
-		setOpacity(0.9f);
 	}
 
 	private void setupPanel() {

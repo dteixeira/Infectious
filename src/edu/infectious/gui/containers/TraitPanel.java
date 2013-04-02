@@ -34,10 +34,6 @@ public class TraitPanel extends JPanel {
 	private static final int	BUTTON_WIDTH		= 110;
 	private static final long	serialVersionUID	= 1L;
 
-	/*
-	 * Instance fields
-	 */
-	private Color				backgroundColor;
 	private boolean				buttonHover			= false;
 	private Button				buyButton;
 	private Button				closeButton;
@@ -49,9 +45,8 @@ public class TraitPanel extends JPanel {
 	/*
 	 * Constructor
 	 */
-	public TraitPanel(Color backgroundColor) {
+	public TraitPanel() {
 		super(true);
-		this.backgroundColor = backgroundColor;
 		setupPanel();
 		setupTextArea();
 		setupButtons();
@@ -252,7 +247,7 @@ public class TraitPanel extends JPanel {
 	}
 
 	private void setupPanel() {
-		setBackground(backgroundColor);
+		setBackground(new Color(0f, 0f, 0f, 0f));
 		for (Trait t : Trait.getTraitList()) {
 			if (t.getType() == Game.getPlayer().getPlayerType()) {
 				currentTrait = t;
@@ -267,7 +262,7 @@ public class TraitPanel extends JPanel {
 		descriptionArea.setLineWrap(true);
 		descriptionArea.setWrapStyleWord(true);
 		descriptionArea.setFont(new Font("sans-serif", Font.PLAIN, 20));
-		descriptionArea.setBackground(backgroundColor);
+		descriptionArea.setBackground(new Color(0f, 0f, 0f, 0f));
 		descriptionArea.setForeground(Color.WHITE);
 		descriptionArea.setDisabledTextColor(Color.WHITE);
 		descriptionArea.setEditable(false);

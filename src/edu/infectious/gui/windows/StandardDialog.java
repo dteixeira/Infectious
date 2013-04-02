@@ -44,7 +44,7 @@ public abstract class StandardDialog extends JDialog {
 	 * Class instances
 	 */
 	public static void setupDialogs() {
-		setupDialogs(new Color(0.137f, 0.137f, 0.137f), new Dimension(800, 600));
+		setupDialogs(new Color(0.137f, 0.137f, 0.137f, 0.8f), new Dimension(800, 600));
 	}
 
 	public static void setupDialogs(Color color, Dimension dimension) {
@@ -54,7 +54,7 @@ public abstract class StandardDialog extends JDialog {
 	}
 
 	public static void setupDialogs(Dimension dimension) {
-		setupDialogs(new Color(0.137f, 0.137f, 0.137f), dimension);
+		setupDialogs(new Color(0.137f, 0.137f, 0.137f, 0.8f), dimension);
 	}
 
 	private static void drawHexagon(Graphics g, Color c, Polygon p) {
@@ -120,10 +120,11 @@ public abstract class StandardDialog extends JDialog {
 	 * Instance methods
 	 */
 	private void setupBackground() {
+		setBackground(backgroundColor);
 		background = new BufferedImage(dimensions.width, dimensions.height,
-				BufferedImage.TYPE_INT_RGB);
+				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = background.createGraphics();
-		g.setBackground(backgroundColor);
+		g.setBackground(new Color(0f, 0f, 0f, 0f));
 		g.clearRect(0, 0, dimensions.width, dimensions.height);
 		Polygon p = new Polygon();
 		p.addPoint(5, 5);

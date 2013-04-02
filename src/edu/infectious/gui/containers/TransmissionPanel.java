@@ -37,7 +37,6 @@ public class TransmissionPanel extends JPanel {
 	 * Instance fields
 	 */
 	private Button				airButton;
-	private Color				backgroundColor;
 	private boolean				buttonHover			= false;
 	private Button				livestockButton;
 	private Button				plagueButton;
@@ -46,9 +45,8 @@ public class TransmissionPanel extends JPanel {
 	/*
 	 * Constructor
 	 */
-	public TransmissionPanel(Color backgroundColor) {
+	public TransmissionPanel() {
 		super(true);
-		this.backgroundColor = backgroundColor;
 		setupPanel();
 		setupButtons();
 		setupListeners();
@@ -255,7 +253,7 @@ public class TransmissionPanel extends JPanel {
 	}
 
 	private void setupPanel() {
-		setBackground(backgroundColor);
+		setBackground(new Color(0f, 0f, 0f, 0f));
 	}
 
 }
