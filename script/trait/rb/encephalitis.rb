@@ -1,4 +1,4 @@
-class Vomiting < TraitKlass
+class Encephalitis < TraitKlass
 
   def initialize
     # Calls super class constructor and resets
@@ -6,32 +6,31 @@ class Vomiting < TraitKlass
     super
     
     # Define all need values
-    name                     "Vomiting"
-    description              "Vomiting is the expulsion of the stomach's contents through the mouth. It has" <<
-                             " many causes, from stomach inflammation to brain tumors. It's a very" <<
-                             " noticeable symptom."
-    activationCost           6
-    deactivationCost         3
+    name                     "Encephalitis"
+    description              "Encephalitis is acute inflammation of the brain. Brain damage occurs as" <<
+                             " the brain pushes against the skull, and eventually results in death."
+    activationCost           21
+    deactivationCost         12
     type                     :virus
   end
 
   # Defines what to do when this trait's effect
   # is applied
   def applyEffect
-    changeDeadliness         0.02
-    changeInfectiousness     0.03
-    changeNotoriety          0.05
+    changeDeadliness         0.05
+    changeInfectiousness     0.00
+    changeNotoriety          0.00
   end
   
   # Defines what to do when this trait's effect
   # is removed
   def removeEffect
-    changeDeadliness         -0.02
-    changeInfectiousness     -0.03
-    changeNotoriety          -0.05
+    changeDeadliness         -0.00
+    changeInfectiousness     -0.00
+    changeNotoriety          -0.00
   end
 
 end
 
 # Add object to the traits list
-Vomiting.new.add
+Encephalitis.new.add
