@@ -16,17 +16,17 @@ class CoughSyrup < TraitKlass
   # Defines what to do when this trait's effect
   # is applied
   def applyEffect
-    changeDeadliness         0.0
-    changeInfectiousness     0.0
-    changeNotoriety          0.0
+    changeDeadliness         -0.05
+    changeInfectiousness     -0.03
+    changeNotoriety          -0.01
   end
   
   # Defines what to do when this trait's effect
   # is removed
   def removeEffect
-    changeDeadliness         0.0
-    changeInfectiousness     0.0
-    changeNotoriety          0.0
+    changeDeadliness         0.05
+    changeInfectiousness     0.03
+    changeNotoriety          0.01
   end
 
 end
